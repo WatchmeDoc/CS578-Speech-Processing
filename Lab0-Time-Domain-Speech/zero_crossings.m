@@ -1,5 +1,7 @@
-clear; 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SAMPLE CODE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear;
+frame_rate = 0.01;
+frame_length = 0.03;
+
 % Reading the speech signal
 [s, fs] = audioread('H.22.16k.wav');
 
@@ -10,10 +12,10 @@ s = s - mean(s);
 D = length(s);
 
 % Frame length (30 ms, how many samples? )
-L = fs * 0.03;
+L = fs * frame_length;
 
 % Frame shift (10 ms, how many samples? )
-U = fs * 0.01;
+U = fs * frame_rate;
 
 % Window type (Hamming)
 win = hamming(L);
@@ -39,10 +41,10 @@ ZCRthres = (3/2)*mean(ZCr) - 0.3*std(ZCr);
 
 % Classification for each frame
 for i = 1:1:Nfr
-    if energy(i) > Ethres && ZCr(i) < ZCRthres
+    if energy(i) > Ethres
         % VOICED
         VUS(i) = 1.0;
-    elseif ZCr(i) < ZCRthres && energy(i) < Ethres
+    elseif ZCr(i) < ZCRthres
         % SILENCE
         VUS(i) = 0.0;
     elseif ZCr(i) > ZCRthres
