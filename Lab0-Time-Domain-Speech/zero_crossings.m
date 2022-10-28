@@ -42,22 +42,23 @@ for i = 1:1:Nfr
     if energy(i) > Ethres && ZCr(i) < ZCRthres
         % VOICED
         VUS(i) = 1.0;
-    elseif energy(i) < Ethres && ZCr(i) < ZCRthres
+    elseif ZCr(i) < ZCRthres && energy(i) < Ethres
         % SILENCE
         VUS(i) = 0.0;
-    elseif energy(i) < Ethres && ZCr(i) > ZCRthres
+    elseif ZCr(i) > ZCRthres
         % UNVOICED
         VUS(i) = 0.5;
     end
 end
 % Interpolation with interp1
-VUSi = interp1(VUS, s');
+VUSi = interp1(T, VUS, 1:1:D);
 
 % Visualize
 figure;
 t = 0:1/fs:length(s)/fs-1/fs;
-plot(t, VUSi);
+plot(t, VUSi,'LineWidth', 2.5);
 hold on; plot(t, s/max(s), 'r'); hold off;
 xlabel('Time (s)');
+ylim([-2 2]);
 title('Energy & Zero-Crossings Rate-based VUS discrimination');
 grid;
