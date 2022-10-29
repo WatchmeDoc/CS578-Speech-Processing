@@ -71,5 +71,6 @@ for k = 1:length(myFiles)
     xlabel('Time (s)');
     ylim([-2 2]);
     title(['VUS discrimination for ', baseFileName], 'Interpreter', 'none');
+    legend('VUS classification', 'Input Speech');
     grid;
 end
