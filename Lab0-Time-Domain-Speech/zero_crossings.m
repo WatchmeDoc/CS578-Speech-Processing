@@ -70,6 +70,6 @@ for k = 1:length(myFiles)
     hold on; plot(t, s/max(s), 'r'); hold off;
     xlabel('Time (s)');
     ylim([-2 2]);
-    title('Energy & Zero-Crossings Rate-based VUS discrimination');
+    title(['VUS discrimination for ', baseFileName], 'Interpreter', 'none');
     grid;
 end
