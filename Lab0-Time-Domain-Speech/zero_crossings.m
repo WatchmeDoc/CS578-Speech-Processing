@@ -69,7 +69,7 @@ for k = 1:length(myFiles)
     plot(t, VUSi,'LineWidth', 2.5);
     hold on; plot(t, s/max(s), 'r'); hold off;
     xlabel('Time (s)');
-    ylim([-2 2]);
+    ylim([-1.5 1.5]);
     title(['VUS discrimination for ', baseFileName], 'Interpreter', 'none');
     legend('VUS classification', 'Input Speech');
     grid;
