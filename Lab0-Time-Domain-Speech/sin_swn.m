@@ -74,24 +74,21 @@ for k = 1:length(myFiles)
     legend('VUS classification', 'Input Speech');
     grid;
     
-    if strcmp(baseFileName, 'arctic_a0049-sin.wav') || strcmp(baseFileName, 'arctic_a0049-swn.wav')
         
-        % Interpolation 
-        energy_dis = interp1(T, energy, 1:1:D);
-        zero_crossing = interp1(T, ZCr, 1:1:D);
-        
-        % Visualize
-        figure;
-        plot(t, energy_dis,'LineWidth', 1);
-        title(['Energy distribution for ', baseFileName], 'Interpreter', 'none');
-        ylabel('Short-Time Energy');
-        xlabel('Time (s)');
+    % Interpolation 
+    energy_dis = interp1(T, energy, 1:1:D);
+    zero_crossing = interp1(T, ZCr, 1:1:D);
 
-        figure;
-        plot(t, zero_crossing,'LineWidth', 1);
-        title(['Zero-crossings distribution for ', baseFileName], 'Interpreter', 'none');
-        ylabel('Short-Time Zero Crossings Rate');
-        xlabel('Time (s)');
-    end
+    % Visualize
+    figure;
+    plot(t, energy_dis,'LineWidth', 1);
+    title(['Energy distribution for ', baseFileName], 'Interpreter', 'none');
+    ylabel('Short-Time Energy');
+    xlabel('Time (s)');
 
+    figure;
+    plot(t, zero_crossing,'LineWidth', 1);
+    title(['Zero-crossings distribution for ', baseFileName], 'Interpreter', 'none');
+    ylabel('Short-Time Zero Crossings Rate');
+    xlabel('Time (s)');
 end
