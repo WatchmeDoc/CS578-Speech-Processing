@@ -7,7 +7,7 @@ myDir = uigetdir; %gets directory
 myFiles = dir(fullfile(myDir,'*.wav')); %gets all wav files in struct
 
 
-coeffs = [0.01 0.03; 0.02 0.03; 0.05 0.03; 0.01 0.05; 0.05 0.06 ];
+coeffs = [0.01 0.03; 0.02 0.03; 0.05 0.03; 0.1 0.05; 0.1 0.1 ];
 for j = 1:length(coeffs)
     frame_rate = coeffs(j, 1);
     frame_length = coeffs(j, 2);
@@ -77,7 +77,7 @@ for j = 1:length(coeffs)
         hold on; plot(t, s/max(s), 'r'); hold off;
         xlabel('Time (s)');
         ylim([-1.5 1.5]);
-        title(['Frame Length = ', num2str(frame_length), ' Frame rate = ', num2str(frame_rate)], 'Interpreter', 'none');
+        title(['Frame Length = ', num2str(frame_length), ' Stride size = ', num2str(frame_rate)], 'Interpreter', 'none');
         legend('VUS classification', 'Input Speech');
         grid;
     end

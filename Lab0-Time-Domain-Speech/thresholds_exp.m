@@ -7,7 +7,7 @@ myDir = uigetdir; %gets directory
 myFiles = dir(fullfile(myDir,'*.wav')); %gets all wav files in struct
 
 
-coeffs = [1 1; 0.5 0.5; 0.5 2; 2 0.5; 2 2 ];
+coeffs = [1 1; 0.5 0.5; 0.5 1; 1 0.5; 2 2 ];
 for j = 1:length(coeffs)
     energy_coeff = coeffs(j, 1);
     zcr_coeff = coeffs(j, 2);
