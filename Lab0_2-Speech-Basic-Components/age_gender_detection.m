@@ -31,27 +31,38 @@ for k = 1:length(myFiles)
     Nfr = floor((D - L) / U) + 1;
     
     % Memory allocation (for speed)
-    f0 = zeros(1, Nfr+1);
+    f_acf = zeros(1, Nfr);
+    f_fft = zeros(1, Nfr);
     
     % Loop which calculates the speech features
     for i = 1:1:Nfr
         frame = s((i-1) * U + 1: (i-1) * U + L ) .* win; % a frame of speech windowed by the Hamming window
-        f0(i) = 0; % CALL FUNCTION THAT DOES THE PEAK PICKING
+        f_acf(i) = acf_peak_picking(frame, fs);
+        f_fft(i) = 0;
         T(i) = L/2 + (i-1)*U; % Next analysis time instant
     end
     
     % Use this if interp1 causes errors
     % [t, index] = unique(T); % Keep only unique values of T
-    f0_i = interp1(T, f0, 1:1:D, 'method', 'spline');
+    f_acf_i = interp1(T, f_acf, 1:1:D, 'spline');
+    f_fft_i = interp1(T, f_fft, 1:1:D, 'spline');
     
     % Visualize
     figure;
+    subplot(2,1,1);
     t = 0:1/fs:length(s)/fs-1/fs;
-    plot(t, f0_i,'LineWidth', 2.5);
-    hold on; plot(t, s/max(s), 'r'); hold off;
-    xlabel('Time (s)');
-    ylim([-1.5 1.5]);
+    plot(t, f_acf_i,'LineWidth', 2.5); hold on;
+    plot(t, f_fft_i, 'LineWidth', 2.5); hold off;
     title(['Pitch estimation for ', baseFileName], 'Interpreter', 'none');
-    legend('Pitch contour', 'Input Speech');
+    legend('AutoCorr', 'FFT');
+    xlabel('Time (s)');
+    ylabel('Frequency (Hz)');
+    
+    subplot(2,1,2);
+    plot(t, s/max(s), 'r');
+    title(['Waveform for ', baseFileName], 'Interpreter', 'none');
+    xlabel('Time (s)');
+    
     grid;
+    
 end
