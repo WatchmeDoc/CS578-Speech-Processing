@@ -12,7 +12,8 @@ for k = 1:length(myFiles)
 
     % Reading the speech signal
     [s, fs] = audioread(fullFileName);
-        % Remove mean value (DC component)
+    
+    % Remove mean value (DC component)
     s = s - mean(s);
 
     % Signal length
