@@ -51,6 +51,35 @@ for k = 1:length(myFiles)
     f_acf_i = interp1(T, f_acf, 1:1:D, 'spline');
     f_fft_i = interp1(T, f_fft, 1:1:D, 'spline');
     
+    
+    % Taking the average of the pitch from all the frames for both methods
+    f_acf_avg = mean(f_acf, 'all');
+    f_fft_avg = mean(f_fft, 'all');
+    
+    
+    % Classification for the age+gender detection using the f_fft_avg
+    if f_fft_avg >= 70 && f_fft_avg <= 275
+        if f_fft_avg < 160
+            disp('Adult Male');
+        elseif f_fft_avg < 275
+            disp('Adult Female');
+        end
+    elseif f_fft_avg >= 275 && f_fft_avg <= 500
+        disp('Child');
+    end
+    
+    % Classification for the age+gender detection using the f_acf_avg
+%     if f_acf_avg >= 70 && f_acf_avg <= 275
+%         if f_acf_avg < 160
+%             disp('Adult Male');
+%         elseif f_acf_avg < 275
+%             disp('Adult Female');
+%         end
+%     elseif f_acf_avg >= 275 && f_acf_avg <= 500
+%         disp('Child');
+%     end
+    
+    
     % Visualize
     figure;
     subplot(2,1,1);
