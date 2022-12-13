@@ -34,11 +34,14 @@ for k = 1:length(myFiles)
     f_acf = zeros(1, Nfr);
     f_fft = zeros(1, Nfr);
     
+    % Number of FFT points for the FFT peak picking
+    NFFT = 2048;
+    
     % Loop which calculates the speech features
     for i = 1:1:Nfr
         frame = s((i-1) * U + 1: (i-1) * U + L ) .* win; % a frame of speech windowed by the Hamming window
         f_acf(i) = acf_peak_picking(frame, fs);
-        f_fft(i) = 0;
+        f_fft(i) = fft_peak_picking(frame, fs, NFFT);
         T(i) = L/2 + (i-1)*U; % Next analysis time instant
     end
     
