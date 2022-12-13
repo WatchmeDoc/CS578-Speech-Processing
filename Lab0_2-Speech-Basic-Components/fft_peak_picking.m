@@ -14,6 +14,6 @@ X1 = 20*log10(X(1:NFFT/2));
 % A child's pitch varies from 300 to 500 Hz max.
 valid_locs = locs(locs >= min_freq & locs <= max_freq);
 valid_peaks = pks(locs >= min_freq & locs <= max_freq);
+valid_peaks = find(valid_peaks > 0);
 
-[~, argmax] = max(valid_peaks);
-f_0 = valid_locs(argmax);
+f_0 = valid_locs(valid_peaks(1));
