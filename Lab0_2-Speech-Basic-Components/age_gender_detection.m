@@ -8,7 +8,7 @@ myFiles = dir(fullfile(myDir,'*-pout-*.wav')); %gets all wav files in struct
 for k = 1:length(myFiles)
     baseFileName = myFiles(k).name;
     fullFileName = fullfile(myDir, baseFileName);
-    fprintf(1, 'Now reading %s\n', fullFileName);
+    fprintf(1, 'Now reading %s\n', baseFileName);
 
     % Reading the speech signal
     [s, fs] = audioread(fullFileName);
