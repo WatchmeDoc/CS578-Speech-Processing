@@ -5,11 +5,13 @@ function [f_0] = acf_peak_picking(frame, fs)
 N = length(frame);
 corr = xcorr(frame);
 pos_corr = corr(N:2*N - 1);
-up_thresh = round(1/70 * fs);
-low_thresh = round(1/500 * fs);
+up_thresh = 1/70;
+low_thresh = 1/500;
 
-[pks, locs] = findpeaks(pos_corr(low_thresh: up_thresh), fs);
+[pks, locs] = findpeaks(pos_corr, fs);
 
-[~, argmax] = max(pks);
-t_0 = locs(argmax) + low_thresh / fs;
-f_0 = 1 / t_0;
+valid_locs = locs(locs >= low_thresh & locs <= up_thresh);
+valid_peaks = pks(locs >= low_thresh & locs <= up_thresh);
+
+[~, argmax] = max(valid_peaks);
+f_0 = 1 / valid_locs(argmax);
