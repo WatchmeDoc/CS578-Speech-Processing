@@ -4,7 +4,7 @@ frame_rate = 0.01;
 frame_length = 0.03;
 
 myDir = uigetdir; %gets directory
-myFiles = dir(fullfile(myDir,'*-pout-*.wav')); %gets all wav files in struct
+myFiles = dir(fullfile(myDir,'*.wav')); %gets all wav files in struct
 for k = 1:length(myFiles)
     baseFileName = myFiles(k).name;
     fullFileName = fullfile(myDir, baseFileName);
@@ -34,15 +34,23 @@ for k = 1:length(myFiles)
     % Memory allocation (for speed)
     f_acf = zeros(1, Nfr);
     f_fft = zeros(1, Nfr);
+    T = zeros(1, Nfr);
     
     % Number of FFT points for the FFT peak picking
     NFFT = 2048;
     
+    VUS = vus_classification(s, fs);
+    
     % Loop which calculates the speech features
     for i = 1:1:Nfr
         frame = s((i-1) * U + 1: (i-1) * U + L ) .* win; % a frame of speech windowed by the Hamming window
-        f_acf(i) = acf_peak_picking(frame, fs);
-        f_fft(i) = fft_peak_picking(frame, fs, NFFT);
+        if VUS(i) == 1.0
+            f_acf(i) = acf_peak_picking(frame, fs);
+            f_fft(i) = fft_peak_picking(frame, fs, NFFT);
+        else
+            f_acf(i) = 0;
+            f_fft(i) = 0;
+        end
         T(i) = L/2 + (i-1)*U; % Next analysis time instant
     end
     
@@ -53,8 +61,8 @@ for k = 1:length(myFiles)
     
     
     % Taking the average of the pitch from all the frames for both methods
-    f_acf_avg = mean(f_acf, 'all');
-    f_fft_avg = mean(f_fft, 'all');
+    f_acf_avg = mean(f_acf(f_acf > 0), 'all');
+    f_fft_avg = mean(f_fft(f_fft > 0), 'all');
     
     
     % Classification for the age+gender detection using the f_fft_avg
