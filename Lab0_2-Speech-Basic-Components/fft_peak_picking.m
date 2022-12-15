@@ -16,4 +16,8 @@ valid_locs = locs(locs >= min_freq & locs <= max_freq);
 valid_peaks = pks(locs >= min_freq & locs <= max_freq);
 valid_peaks = find(valid_peaks > 0);
 
-f_0 = valid_locs(valid_peaks(1));
+if isempty(valid_peaks)
+    f_0 = 0;
+else
+    f_0 = valid_locs(valid_peaks(1));
+end
