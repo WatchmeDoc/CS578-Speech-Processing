@@ -59,33 +59,22 @@ for k = 1:length(myFiles)
     f_acf_i = interp1(T, f_acf, 1:1:D, 'spline');
     f_fft_i = interp1(T, f_fft, 1:1:D, 'spline');
     
+    % Classify speech signal into age + gender:
+    f_fft_pos = f_fft(f_fft > 0);
+    f_fft_male = f_fft_pos(f_fft_pos >= 70 & f_fft_pos <= 160);
+    f_fft_female = f_fft_pos(f_fft_pos >= 160 & f_fft_pos <= 275);
+    f_fft_child = f_fft_pos(f_fft_pos > 275 & f_fft_pos <= 500);
     
-    % Taking the average of the pitch from all the frames for both methods
-    f_acf_avg = mean(f_acf(f_acf > 0), 'all');
-    f_fft_avg = mean(f_fft(f_fft > 0), 'all');
-    
-    
-    % Classification for the age+gender detection using the f_fft_avg
-    if f_fft_avg >= 70 && f_fft_avg <= 275
-        if f_fft_avg < 160
-            disp('Adult Male');
-        elseif f_fft_avg < 275
-            disp('Adult Female');
-        end
-    elseif f_fft_avg >= 275 && f_fft_avg <= 500
-        disp('Child');
+    result = 'Adult Male';
+    max_len = length(f_fft_male);
+    if max_len < length(f_fft_female)
+        result = 'Adult Female';
+        max_len = length(f_fft_female);
     end
-    
-    % Classification for the age+gender detection using the f_acf_avg
-%     if f_acf_avg >= 70 && f_acf_avg <= 275
-%         if f_acf_avg < 160
-%             disp('Adult Male');
-%         elseif f_acf_avg < 275
-%             disp('Adult Female');
-%         end
-%     elseif f_acf_avg >= 275 && f_acf_avg <= 500
-%         disp('Child');
-%     end
+    if max_len < length(f_fft_child)
+        result = 'Child';
+    end
+    disp(result);
     
     
     % Visualize
