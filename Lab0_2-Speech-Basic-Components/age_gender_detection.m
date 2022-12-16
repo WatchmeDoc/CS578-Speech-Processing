@@ -62,7 +62,7 @@ for k = 1:length(myFiles)
     % Classify speech signal into age + gender:
     f_fft_pos = f_fft(f_fft > 0);
     f_fft_male = f_fft_pos(f_fft_pos >= 70 & f_fft_pos <= 160);
-    f_fft_female = f_fft_pos(f_fft_pos >= 160 & f_fft_pos <= 275);
+    f_fft_female = f_fft_pos(f_fft_pos > 160 & f_fft_pos <= 275);
     f_fft_child = f_fft_pos(f_fft_pos > 275 & f_fft_pos <= 500);
     
     result = 'Adult Male';
