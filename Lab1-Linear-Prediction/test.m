@@ -24,13 +24,13 @@ for l=1:Nfr
   r =  xcorr(sigLPC); % correlation
   a =  lpc(r,OrderLPC);  % LPC coef.
   G =  sqrt(r(1) - sum(a(2:end)));  % gain
-  ex = filter(1,a,sigLPC);  % inverse filter
+  ex = sigLPC - filter(a,1,sigLPC);  % inverse filter
     
   % synthesis
   s = filter(G,a, ex);
   ens = sum(s.^2);   % get the short-time energy of the output
   g = sqrt(en/ens);  % normalization factor
-  s  =s*g;           % energy compensation
+  s = s*g;           % energy compensation
   s(1:Shift) = s(1:Shift) + Buffer;  % Overlap and add
   out(tosave) = s(1:Shift);           % save the first part of the frame
   Buffer = s(Shift+1:Horizon);       % buffer the rest of the frame
@@ -40,5 +40,5 @@ for l=1:Nfr
   
 end
 
-soundsc(out);
+soundsc(out, Fs);
 
