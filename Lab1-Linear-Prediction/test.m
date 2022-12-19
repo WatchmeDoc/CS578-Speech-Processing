@@ -1,24 +1,4 @@
-function out = lpc_as_toyou(file)
-%
-% INPUT:
-%   file: input filename of a wav file
-% OUTPUT:
-%   out: a vector contaning the output signal
-%
-% Example:
-%   
-%   out = lpc_as('speechsample.wav');
-%   [sig,fs]= wavread('speechsample.wav');
-%   sound(out,fs);
-%   sound(sig,fs);
-%   sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
-%
-%
-% Yannis Stylianou
-% CSD - CS 578
-%
-
-[sig, Fs] = audioread(file);
+[sig, Fs] = audioread('speechsample.wav');
 
 Horizon = 30;  %30ms - window length
 OrderLPC=24;   %order of LPC
@@ -41,10 +21,14 @@ for l=1:Nfr
   en = sum(sigLPC.^2); % get the short - term energy of the input
   
   % LPC analysis
-  r =   % correlation
-  a =   % LPC coef.
-  G =   % gain
-  ex =  % inverse filter
+  r =  xcorr(sigLPC); % correlation
+  a =  lpc(r,OrderLPC);  % LPC coef.
+  tmp = 0;
+  for k = 1:OrderLPC
+      tmp = tmp + a(k+1) .* r(k);
+  end
+  G =  sqrt(r(1) - tmp);  % gain
+  ex = filter(1,a,sigLPC);  % inverse filter
 
   % synthesis
   s = filter(G,a, ex);
@@ -60,4 +44,5 @@ for l=1:Nfr
   
 end
 
+soundsc(out);
 
