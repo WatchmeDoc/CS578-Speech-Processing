@@ -23,13 +23,9 @@ for l=1:Nfr
   % LPC analysis
   r =  xcorr(sigLPC); % correlation
   a =  lpc(r,OrderLPC);  % LPC coef.
-  tmp = 0;
-  for k = 1:OrderLPC
-      tmp = tmp + a(k+1) .* r(k);
-  end
-  G =  sqrt(r(1) - tmp);  % gain
+  G =  sqrt(r(1) - sum(a(2:end)));  % gain
   ex = filter(1,a,sigLPC);  % inverse filter
-
+    
   % synthesis
   s = filter(G,a, ex);
   ens = sum(s.^2);   % get the short-time energy of the output
