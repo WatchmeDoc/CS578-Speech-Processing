@@ -23,7 +23,7 @@ for l=1:Nfr
   % LPC analysis
   r =  xcorr(sigLPC); % correlation
   a =  lpc(r,OrderLPC);  % LPC coef.
-  G =  sqrt(r(1) - sum(a(2:end)));  % gain
+  G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
   ex = sigLPC - filter(a,1,sigLPC);  % inverse filter
     
   % synthesis
