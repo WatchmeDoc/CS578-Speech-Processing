@@ -3,7 +3,7 @@
 Projects for CS578 Speech Processing course ([link](https://www.csd.uoc.gr/~hy578/index.html)), Computer Science
 Department in University of Crete, taught by Professor [Yannis Stylianou](https://www.csd.uoc.gr/CSD/index.jsp?custom=yannis_stylianou&lang=en).
 
-Implemented in Matlab by George Manos and Alexandros Aggelakis.
+Implemented in Matlab by George Manos and Alexandros Angelakis.
 
 All projects include a small dataset of speech files, the project description and our final report.
 
