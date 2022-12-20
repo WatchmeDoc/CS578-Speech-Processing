@@ -1,30 +1,37 @@
-function a = my_levinson(corr_sig, p)
+function a = my_levinson(r, p)
 %
 % INPUT:
 %   corr_sig: autocorrelation of the frame
 %   p: the order of LPC
 % OUTPUT:
 %   a: LPC coefficients in form [1, -a]
-    I = zeros(p+1, p+1);
-    E = zeros(p+1, 1);
-    E(1) = corr_sig(1);
-    k = zeros(p+1, 1);
-    for m=1:p
-        i = m + 1;
+    % Initial step:
+    I = zeros(p+1, p);
+    E = zeros(p, 1);
+    
+    % Allocate k space:
+    k = zeros(p, 1);
+    
+    k(1) = r(2)/r(1); % 1st order
+    I(1,1) = k(1); % 1st order: 
+    E(1) = (1 - (abs(k(1)))^2)*r(2); % 1st order
+    for i=2:p
+        % Step 1: Compute the partial correlation coefficients
         res = 0;
-        for n=1:m-1
-            j = n + 1;
-            res = res + I(i - 1, j) * corr_sig(i-j);
+        for j=1:i-1
+            res = res + I(i-1, j) * r(i-j + 1);
         end
-        k(i) = (corr_sig(i) - res) / E(i - 1);
+        k(i) = (r(i + 1) - res) / E(i - 1);
+        % Step 2: Update prediction coefficients, I
         I(i, i) = k(i);
-        for n=1:m-1
-            j = n + 1;
-            I(i, j) = I(i - 1, j) - k(i) * I(i - 1, i-j);
+        for j=1:i-1
+            I(i, j) = I(i-1, j) - k(i) * I(i-1, i-j);
         end
+        % Step 3: Update the minimum squared prediction error
         E(i) = (1 - k(i)^2) * E(i - 1);
     end
-    a = I(p+1, 2:end);
+    % Final Step, compute the optimal predictor coefficients, I(*, j)
+    a = I(p, 1:end);
     a = [1, -a];
 
 end
