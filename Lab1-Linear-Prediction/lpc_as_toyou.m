@@ -41,10 +41,11 @@ for l=1:Nfr
   en = sum(sigLPC.^2); % get the short - term energy of the input
   
   % LPC analysis
-  r =   % correlation
-  a =   % LPC coef.
-  G =   % gain
-  ex =  % inverse filter
+  r =  xcorr(sigLPC); % correlation
+  a_truth =  lpc(r,OrderLPC);  % LPC coef.
+  a =  my_levinson(r,OrderLPC);  % LPC coef.
+  G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
+  ex = sigLPC - filter(a,1,sigLPC);  % inverse filter
 
   % synthesis
   s = filter(G,a, ex);
