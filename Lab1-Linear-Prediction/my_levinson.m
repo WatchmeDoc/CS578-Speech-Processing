@@ -14,7 +14,7 @@ function a = my_levinson(r, p)
     
     k(1) = r(2)/r(1); % 1st order
     I(1,1) = k(1); % 1st order: 
-    E(1) = (1 - (abs(k(1)))^2)*r(2); % 1st order
+    E(1) = (1 - (abs(k(1)))^2)*r(1); % 1st order
     for i=2:p
         % Step 1: Compute the partial correlation coefficients
         res = 0;
@@ -33,5 +33,12 @@ function a = my_levinson(r, p)
     % Final Step, compute the optimal predictor coefficients, I(*, j)
     a = I(p, 1:end);
     a = [1, -a];
-
-end
+    
+    % Bale grammi 40 bkpt kai des, ta truth vars einai idia me ths
+    % synarthshs levinson tis matlab, kai to plot tou excitation
+    % moiazei para poli me to derivative tou excitation ton fonitikon
+    % xordon. ypotheto sosto einai ayto, alla bgazei to out os complex kai
+    % den mporoume na to akousoume.
+    [a_truth, E_truth, k_truth] = levinson(r,p); 
+    plot(E);
+ end
