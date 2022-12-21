@@ -42,7 +42,8 @@ for l=1:Nfr
   
   % LPC analysis
   [r,lg] =  xcorr(sigLPC); % correlation
-  a =  my_levinson(r(lg>=0),OrderLPC);  % LPC coef.
+  r = r(lg>=0);
+  a =  my_levinson(r,OrderLPC);  % LPC coef.
   G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
   ex = filter(a,1,sigLPC);  % inverse filter
 
