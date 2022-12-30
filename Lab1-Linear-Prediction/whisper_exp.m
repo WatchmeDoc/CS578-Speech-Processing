@@ -18,10 +18,12 @@ function out = whisper_exp(file)
 % CSD - CS 578
 %
 
+rng(1); % Random seed
+
 [sig, Fs] = audioread(file);
 
 Horizon = 30;  %30ms - window length
-OrderLPC=24;   %order of LPC
+OrderLPC= 24;   %order of LPC
 Buffer = 0;    % initialization
 out = zeros(size(sig)); % initialization
 
@@ -47,6 +49,7 @@ for l=1:Nfr
   G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
   ex = randn(size(sigLPC));
   
+  
   % synthesis
   s = filter(G,a, ex);
   ens = sum(s.^2);   % get the short-time energy of the output
@@ -60,5 +63,3 @@ for l=1:Nfr
   tosave = tosave+Shift;
   
 end
-
-
