@@ -1,7 +1,15 @@
 %% normal
+close all; clear;
+
 file = 'speechsample.wav';
 out = lpc_as_toyou(file);
 [sig, fs] = audioread(file);
+
+figure; 
+subplot(211); plot(sig); title('Original signal');
+subplot(212); plot(out); title('Synthesized signal');
+
+MSE = (1/size(sig,1)) * sum((sig - out).^2);
 
 soundsc(out, fs);
 %sound(out,fs);

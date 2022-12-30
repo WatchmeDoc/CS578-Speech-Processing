@@ -21,7 +21,7 @@ function out = lpc_as_toyou(file)
 [sig, Fs] = audioread(file);
 
 Horizon = 30;  %30ms - window length
-OrderLPC=24;   %order of LPC
+OrderLPC = 1; %order of LPC
 Buffer = 0;    % initialization
 out = zeros(size(sig)); % initialization
 
@@ -46,19 +46,17 @@ for l=1:Nfr
   a =  my_levinson(r,OrderLPC);  % LPC coef.
   G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
   ex = filter(a,1,sigLPC);  % inverse filter
-
+  
   % synthesis
   s = filter(G,a, ex);
   ens = sum(s.^2);   % get the short-time energy of the output
   g = sqrt(en/ens);  % normalization factor
-  s  =s*g;           % energy compensation
+  s  = s*g;          % energy compensation
   s(1:Shift) = s(1:Shift) + Buffer;  % Overlap and add
-  out(tosave) = s(1:Shift);           % save the first part of the frame
+  out(tosave) = s(1:Shift);          % save the first part of the frame
   Buffer = s(Shift+1:Horizon);       % buffer the rest of the frame
   
   slice = slice+Shift;   % move the frame
   tosave = tosave+Shift;
   
 end
-
-
