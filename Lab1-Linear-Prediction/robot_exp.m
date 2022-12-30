@@ -21,7 +21,7 @@ function out = robot_exp(file)
 [sig, Fs] = audioread(file);
 
 Horizon = 30;  %30ms - window length
-OrderLPC=24;   %order of LPC
+OrderLPC=100;   %order of LPC
 Buffer = 0;    % initialization
 out = zeros(size(sig)); % initialization
 
@@ -45,8 +45,8 @@ for l=1:Nfr
   r = r(lg>=0);
   a =  my_levinson(r,OrderLPC);  % LPC coef.
   G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
-  ex = repelem([1 0], size(sigLPC,1)/2); %      [111 ... 000 ...]
-%   ex = repelem([0 1], size(sigLPC,1)/2); %    [000 ... 111 ...]
+%   ex = repelem([1 0], size(sigLPC,1)/2); %      [111 ... 000 ...]
+  ex = repelem([0 1], size(sigLPC,1)/2); %    [000 ... 111 ...]
 %   ex = repmat([1 0], 1, size(sigLPC,1)/2); %  [1 0 1 0 1 0 ...]
   
   % synthesis
