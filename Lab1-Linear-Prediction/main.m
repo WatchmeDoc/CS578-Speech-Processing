@@ -48,6 +48,14 @@ soundsc(out, fs);
 %sound(sig,fs);
 % sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
 
+%% Vocal Tract Modifications
+close all; clear;
+
+file = 'speechsample.wav';
+out = vocal_tract_modifications(file);
+[sig, fs] = audioread(file);
+
+soundsc(out, fs);
 %% George Manos voice
 close all; clear;
 

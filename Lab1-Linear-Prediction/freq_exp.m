@@ -21,7 +21,7 @@ function freq_exp(file)
 [sig, fs] = audioread(file);
 
 Horizon = 30;  %30ms - window length
-OrderLPC = 10; %order of LPC
+OrderLPC = 200; %order of LPC
 Buffer = 0;    % initialization
 out = zeros(size(sig)); % initialization
 
@@ -51,7 +51,7 @@ for l=1:Nfr
  
   
   if l == 125
-    [h,w] = freqz(1,a, 'whole', NFFT);
+    [h,w] = freqz(G,a, 'whole', NFFT);
     X = fft(sigLPC, NFFT);
     
     figure;
