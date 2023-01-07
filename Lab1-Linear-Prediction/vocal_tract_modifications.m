@@ -21,7 +21,7 @@ function out = vocal_tract_modifications(file)
 [sig, Fs] = audioread(file);
 
 Horizon = 30;  %30ms - window length
-OrderLPC = 15; %order of LPC
+OrderLPC = 8; %order of LPC
 Buffer = 0;    % initialization
 out = zeros(size(sig)); % initialization
 
@@ -33,9 +33,7 @@ Lsig = length(sig);
 slice = 1:Horizon;
 tosave = 1:Shift;
 Nfr = floor((Lsig-Horizon)/Shift)+1;  % number of frames
-NFFT = 2048; 
-freq = 0:Fs/NFFT:Fs/2-1/Fs;
-mod_coeff = 1.1; % percentage
+mod_coeff = 0.8; % percentage
 
 % analysis frame-by-frame
 for l=1:Nfr
@@ -50,8 +48,6 @@ for l=1:Nfr
   G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
   ex = filter(a,1,sigLPC);  % inverse filter
   
-  %X = fft(sigLPC, NFFT);
-  % figure; plot(freq, 20*log10(abs(X(1:NFFT/2)))); grid;
   % Find poles and split in imaginary and real ones
   poles = roots(a);
   img_poles = poles(imag(poles) ~= 0);
