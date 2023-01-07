@@ -1,4 +1,4 @@
-function out = lpc_as_toyou(file)
+function freq_exp(file)
 %
 % INPUT:
 %   file: input filename of a wav file
@@ -18,14 +18,14 @@ function out = lpc_as_toyou(file)
 % CSD - CS 578
 %
 
-[sig, Fs] = audioread(file);
+[sig, fs] = audioread(file);
 
 Horizon = 30;  %30ms - window length
 OrderLPC = 10; %order of LPC
 Buffer = 0;    % initialization
 out = zeros(size(sig)); % initialization
 
-Horizon = Horizon*Fs/1000;
+Horizon = Horizon*fs/1000;
 Shift = Horizon/2;       % frame size - step size
 Win = hanning(Horizon);  % analysis window
 
@@ -33,6 +33,8 @@ Lsig = length(sig);
 slice = 1:Horizon;
 tosave = 1:Shift;
 Nfr = floor((Lsig-Horizon)/Shift)+1;  % number of frames
+NFFT = 2048;
+freq = 0:fs/NFFT:fs/2-1/fs;
 
 % analysis frame-by-frame
 for l=1:Nfr
@@ -46,17 +48,17 @@ for l=1:Nfr
   a =  my_levinson(r,OrderLPC);  % LPC coef.
   G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
   ex = filter(a,1,sigLPC);  % inverse filter
+ 
   
-  % synthesis
-  s = filter(G,a, ex);
-  ens = sum(s.^2);   % get the short-time energy of the output
-  g = sqrt(en/ens);  % normalization factor
-  s  = s*g;          % energy compensation
-  s(1:Shift) = s(1:Shift) + Buffer;  % Overlap and add
-  out(tosave) = s(1:Shift);          % save the first part of the frame
-  Buffer = s(Shift+1:Horizon);       % buffer the rest of the frame
-  
-  slice = slice+Shift;   % move the frame
-  tosave = tosave+Shift;
+  if l == 125
+    [h,w] = freqz(1,a, 'whole', NFFT);
+    X = fft(sigLPC, NFFT);
+    
+    figure;
+    plot(freq, 20*log10(abs(h(1:NFFT/2)))); grid;
+    hold on;
+    plot(freq, 20*log10(abs(X(1:NFFT/2)))); grid;
+    hold off;
+  end
   
 end
