@@ -35,7 +35,6 @@ soundsc(out, fs);
 %sound(sig,fs);
 % sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
 
-
 %% robot
 close all; clear;
 
