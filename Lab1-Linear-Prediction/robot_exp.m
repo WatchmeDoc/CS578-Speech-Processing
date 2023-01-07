@@ -45,9 +45,11 @@ for l=1:Nfr
   r = r(lg>=0);
   a =  my_levinson(r,OrderLPC);  % LPC coef.
   G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
-%   ex = repelem([1 0], size(sigLPC,1)/2); %      [111 ... 000 ...]
-  ex = repelem([0 1], size(sigLPC,1)/2); %    [000 ... 111 ...]
-%   ex = repmat([1 0], 1, size(sigLPC,1)/2); %  [1 0 1 0 1 0 ...]
+  ex = filter(a,1,sigLPC);  % inverse filter
+  
+  [~,locs] = findpeaks(ex);
+  ex = zeros(480,1);
+  ex(locs) = 1;
   
   % synthesis
   s = filter(G,a, ex);

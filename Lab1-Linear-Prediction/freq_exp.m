@@ -21,7 +21,7 @@ function freq_exp(file)
 [sig, fs] = audioread(file);
 
 Horizon = 30;  %30ms - window length
-OrderLPC = 123; %order of LPC
+OrderLPC = 96; %order of LPC
 
 Horizon = Horizon*fs/1000;
 Shift = Horizon/2;       % frame size - step size
@@ -58,7 +58,6 @@ for l=1:Nfr
         xlabel('Frequency (Hz)')
         ylabel('Amplitude (dB)')
         legend('Magnitude of LP filter', 'Magnitude of FFT of frame');
-        
     end
    
     % Unvoiced speech frame
