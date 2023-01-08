@@ -61,7 +61,6 @@ for l=1:Nfr
   img_poles(I, :) = B .* exp(1i*mod_freq);
   all_poles = [real_poles; img_poles];
   a = poly(all_poles);
-  close all;
   
   % synthesis
   s = filter(G,a, ex);
