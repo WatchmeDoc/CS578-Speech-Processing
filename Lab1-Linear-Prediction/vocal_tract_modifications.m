@@ -21,7 +21,7 @@ function out = vocal_tract_modifications(file)
 [sig, Fs] = audioread(file);
 
 Horizon = 30;  %30ms - window length
-OrderLPC = 8; %order of LPC
+OrderLPC = 28; %order of LPC
 Buffer = 0;    % initialization
 out = zeros(size(sig)); % initialization
 
@@ -33,7 +33,7 @@ Lsig = length(sig);
 slice = 1:Horizon;
 tosave = 1:Shift;
 Nfr = floor((Lsig-Horizon)/Shift)+1;  % number of frames
-mod_coeff = 0.8; % percentage
+mod_coeff = 1.2; % percentage
 
 % analysis frame-by-frame
 for l=1:Nfr
