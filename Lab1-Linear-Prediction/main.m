@@ -31,6 +31,10 @@ out = whisper_exp(file);
 [sig, fs] = audioread(file);
 
 soundsc(out, fs);
+
+figure; 
+subplot(211); plot(sig); title('Original signal');
+subplot(212); plot(out); title('Synthesized signal (whisper)');
 %sound(out,fs);
 %sound(sig,fs);
 % sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
@@ -43,6 +47,10 @@ out = robot_exp(file);
 [sig, fs] = audioread(file);
 
 soundsc(out, fs);
+
+figure; 
+subplot(211); plot(sig); title('Original signal');
+subplot(212); plot(out); title('Synthesized signal (robot)');
 %sound(out,fs);
 %sound(sig,fs);
 % sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
