@@ -17,7 +17,6 @@ function out = lpc_as_toyou(file)
 % Yannis Stylianou
 % CSD - CS 578
 %
-
 [sig, Fs] = audioread(file);
 
 Horizon = 30;  %30ms - window length
@@ -44,6 +43,10 @@ for l=1:Nfr
   [r,lg] =  xcorr(sigLPC); % correlation
   r = r(lg>=0);
   a =  my_levinson(r,OrderLPC);  % LPC coef.
+  
+  [k,g] = lpc_to_rc(a , OrderLPC); % RC coef.
+  a_new = rc_to_lpc(k, OrderLPC); % LPC coef.
+  
   G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
   ex = filter(a,1,sigLPC);  % inverse filter
   
