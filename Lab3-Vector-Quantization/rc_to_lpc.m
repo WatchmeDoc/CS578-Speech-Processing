@@ -18,9 +18,9 @@ LPCmatrix = zeros(OrderLPC, OrderLPC);
 % Calculate the LPC vectors.
 for p = 0:OrderLPC-1  
     for m = 1:p
-       LPCmatrix(p+1, m) = LPCmatrix(p,m) + k(p+1)*LPCmatrix(p, p+1-m); 
+       LPCmatrix(p+1, m) = LPCmatrix(p,m) - k(p+1)*LPCmatrix(p, p+1-m); 
     end
-    LPCmatrix(p+1,p+1) = k(p+1);
+    LPCmatrix(p+1,p+1) = -k(p+1);
 end
 
 % Find the coefficients of order OrderLPC

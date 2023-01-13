@@ -42,9 +42,10 @@ for l=1:Nfr
   % LPC analysis
   [r,lg] =  xcorr(sigLPC); % correlation
   r = r(lg>=0);
-  a =  my_levinson(r,OrderLPC);  % LPC coef.
+  [a,g] =  my_levinson(r,OrderLPC);  % LPC coef.
+
+  k = (1 - 10.^(g))./(1 + 10.^(g)); % Inverse companding function
   
-  [k,g] = lpc_to_rc(a , OrderLPC); % RC coef.
   a_new = rc_to_lpc(k, OrderLPC); % LPC coef.
   
   G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain

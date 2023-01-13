@@ -1,10 +1,11 @@
-function a = my_levinson(r, p)
+function [a,g] = my_levinson(r, p)
 %
 % INPUT:
 %   corr_sig: autocorrelation of the frame
 %   p: the order of LPC
 % OUTPUT:
 %   a: LPC coefficients in form [1, -a]
+%   g: companding reflection coefficients
     % Initial step:
     I = zeros(p+1, p);
     E = zeros(p, 1);
@@ -33,4 +34,7 @@ function a = my_levinson(r, p)
     % Final Step, compute the optimal predictor coefficients, I(*, j)
     a = I(p, 1:end);
     a = [1, -a];
+    
+    % Calculate the companding RC
+    g = log10((1 - k)./(1 + k));
 end
