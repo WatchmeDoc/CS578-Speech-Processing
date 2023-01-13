@@ -1,4 +1,4 @@
-function out = lpc_as_toyou(file)
+function out = quantized_lpc(file)
 %
 % INPUT:
 %   file: input filename of a wav file
@@ -19,8 +19,9 @@ function out = lpc_as_toyou(file)
 %
 [sig, Fs] = audioread(file);
 
-Horizon = 30;  %30ms - window length
-OrderLPC = 10; %order of LPC
+Horizon = 30;  % 30ms - window length
+OrderLPC = 10; % order of LPC
+num_bits = 6;  % Number of bits for Scalar Quantization
 Buffer = 0;    % initialization
 out = zeros(size(sig)); % initialization
 
@@ -51,11 +52,13 @@ for l=1:Nfr
   G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
   ex = filter(a,1,sigLPC);  % inverse filter
   
+  quantized_g = scalar_quantization(G, num_bits);
+  
   % synthesis
   s = filter(G,a, ex);
   ens = sum(s.^2);   % get the short-time energy of the output
-  g = sqrt(en/ens);  % normalization factor
-  s  = s*g;          % energy compensation
+  % g = sqrt(en/ens);  % normalization factor
+  % s  = s*g;          % energy compensation
   s(1:Shift) = s(1:Shift) + Buffer;  % Overlap and add
   out(tosave) = s(1:Shift);          % save the first part of the frame
   Buffer = s(Shift+1:Horizon);       % buffer the rest of the frame
