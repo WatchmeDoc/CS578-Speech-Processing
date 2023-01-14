@@ -1,96 +1,51 @@
-%% normal
-close all; clear;
+%% Scalar Quantization
+clear; close all;
 
-file = 'speechsample.wav';
-out = lpc_as_toyou(file);
-[sig, fs] = audioread(file);
+rootdir = uigetdir; %gets directory
+filelist = dir(fullfile(rootdir, '**\*.wav*'));  %get list of files and folders in any subfolder
+filelist = filelist(~[filelist.isdir]);  %remove folders from list
 
-% figure; 
-% subplot(211); plot(sig); title('Original signal');
-% subplot(212); plot(out); title('Synthesized signal');
-% 
-% MSE = (1/size(sig,1)) * sum((sig - out).^2);
-% 
-% soundsc(out, fs);
-%sound(out,fs);
-%sound(sig,fs);
-% sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
+% the gains of all the speech signals
+G = cell(length(filelist), 1);
 
-%% freqz
-close all; clear;
+% For each train speech signal store all its gains
+for k = 1:length(filelist)
+    baseFileName = filelist(k).name;
+    fullFileName = [filelist(k).folder, '\', baseFileName];
+    fprintf(1, 'Now reading %s\n', baseFileName);
 
-file = 'speechsample.wav';
-freq_exp(file);
+    G{k} = SQ_analysis(fullFileName);
+end
 
+% Finding the max and min of all gains
+max_G = max(G{1});
+min_G = min(G{1});
 
-%% whisper
-close all; clear;
+for k = 2:length(G)
+    if max(G{k}) > max_G
+        max_G = max(G{k});
+    end
+    if min(G{k}) < min_G
+        min_G = min(G{k});
+    end
+end
 
-file = 'speechsample.wav';
-out = whisper_exp(file);
-[sig, fs] = audioread(file);
+qg = cell(length(G), 1); % the quantized gains
+bits = 2; % number of bits for the quantization
 
-soundsc(out, fs);
+% Quantize every gain of the train speech signals
+for k = 1:length(G)
+    tmp = zeros(1, length(G{k}));
+    for l = 1:length(G{k})
+        tmp(l) = scalar_quantization(G{k}(l), bits, min_G, max_G);
+    end
+    qg{k} = tmp;
+end
 
+% Plotting
 figure; 
-subplot(211); plot(sig); title('Original signal');
-subplot(212); plot(out); title('Synthesized signal (whisper)');
-%sound(out,fs);
-%sound(sig,fs);
-% sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
-
-%% robot
-close all; clear;
-
-file = 'speechsample.wav';
-out = robot_exp(file);
-[sig, fs] = audioread(file);
-
-soundsc(out, fs);
-
-figure; 
-subplot(211); plot(sig); title('Original signal');
-subplot(212); plot(out); title('Synthesized signal (robot)');
-%sound(out,fs);
-%sound(sig,fs);
-% sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
-
-%% Vocal Tract Modifications
-close all; clear;
-
-file = 'speechsample.wav';
-out = vocal_tract_modifications(file);
-[sig, fs] = audioread(file);
-
-soundsc(out, fs);
-%% George Manos voice
-close all; clear;
-
-file = 'stars_16k.wav';
-out = lpc_as_toyou(file);
-[sig, fs] = audioread(file);
-
-figure; 
-subplot(211); plot(sig); title('Original signal');
-subplot(212); plot(out); title('Synthesized signal');
-
-MSE = (1/size(sig,1)) * sum((sig - out).^2);
-
-soundsc(out, fs);
-
-%% Alexandros Angelakis voice
-close all; clear;
-
-file = 'truth_16k.wav';
-out = lpc_as_toyou(file);
-[sig, fs] = audioread(file);
-
-figure; 
-subplot(211); plot(sig); title('Original signal');
-subplot(212); plot(out); title('Synthesized signal');
-
-MSE = (1/size(sig,1)) * sum((sig - out).^2);
-
-soundsc(out, fs);
-
-
+plot(G{1}); 
+hold on;
+plot(qg{1}, 'LineWidth',2);
+hold off;
+legend('Before Quantization', 'After Quantization');
