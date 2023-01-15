@@ -1,4 +1,4 @@
-function out = quantized_lpc(file)
+function out = quantized_lpc(file, min_g, max_g)
 %
 % INPUT:
 %   file: input filename of a wav file
@@ -44,18 +44,20 @@ for l=1:Nfr
   [r,lg] =  xcorr(sigLPC); % correlation
   r = r(lg>=0);
   [a,g] =  my_levinson(r,OrderLPC);  % LPC coef.
-
-  k = (1 - 10.^(g))./(1 + 10.^(g)); % Inverse companding function
-  
-  a_new = rc_to_lpc(k, OrderLPC); % LPC coef.
-  
   G =  sqrt(sum(a .* r(1:OrderLPC + 1).'));  % gain
   ex = filter(a,1,sigLPC);  % inverse filter
+  % TODO Check if quantized "a" coeffs should be applied to excitation
+  % signal or not
   
-  quantized_g = scalar_quantization(G, num_bits);
+  
+  q_coeffs = vector_quantization(g, num_bits);
+  k = (1 - 10.^(q_coeffs))./(1 + 10.^(q_coeffs)); % Inverse companding function
+  a_new = rc_to_lpc(k, OrderLPC); % LPC coef.
+  
+  qg = scalar_quantization(G, num_bits, min_g, max_g);
   
   % synthesis
-  s = filter(G,a, ex);
+  s = filter(qg, a_new, ex);
   ens = sum(s.^2);   % get the short-time energy of the output
   % g = sqrt(en/ens);  % normalization factor
   % s  = s*g;          % energy compensation

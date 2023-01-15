@@ -1,7 +1,7 @@
 %% Scalar Quantization
 clear; close all;
 
-rootdir = uigetdir; %gets directory
+rootdir = uigetdir('.', 'Choose Training Data Directory'); %gets directory
 filelist = dir(fullfile(rootdir, '**\*.wav*'));  %get list of files and folders in any subfolder
 filelist = filelist(~[filelist.isdir]);  %remove folders from list
 
@@ -31,9 +31,12 @@ for k = 2:length(G)
 end
 
 qg = cell(length(G), 1); % the quantized gains
-bits = 2; % number of bits for the quantization
+bits = 6; % number of bits for the quantization
 
-%% Quantize every gain of the train speech signals
+fprintf('------------------------------------\n');
+fprintf('Quantization Training Finished\n');
+fprintf('------------------------------------\n');
+%% Check Quantization Levels and how they are applied
 for k = 1:length(G)
     tmp = zeros(1, length(G{k}));
     for l = 1:length(G{k})
@@ -42,10 +45,40 @@ for k = 1:length(G)
     qg{k} = tmp;
 end
 
+index = 7;
 % Plotting
 figure; 
-plot(G{1}); 
+plot(G{index}); 
 hold on;
-plot(qg{1}, 'LineWidth',2);
+plot(qg{index}, 'LineWidth',2);
 hold off;
 legend('Before Quantization', 'After Quantization');
+
+
+%% Read Test Set files
+close all;
+rootdir = uigetdir('.', 'Choose Testing Data Directory'); %gets directory
+filelist = dir(fullfile(rootdir, '**\*.wav*'));  %get list of files and folders in any subfolder
+filelist = filelist(~[filelist.isdir]);  %remove folders from list
+
+
+%% Apply LPC with Quantization on test set
+for k = 1:length(filelist)
+    baseFileName = filelist(k).name;
+    fullFileName = [filelist(k).folder, '\', baseFileName];
+    fprintf(1, 'Applying Quantization to %s\t', baseFileName);
+
+    out = quantized_lpc(fullFileName, min_G, max_G);
+    [sig, fs] = audioread(fullFileName);
+
+    figure; 
+    subplot(211); plot(sig); title('Original signal');
+    subplot(212); plot(out); title('Synthesized signal');
+
+    MSE = (1/size(sig,1)) * sum((sig - out).^2);
+    fprintf(1, 'MSE: %f\n', MSE);
+    soundsc(sig, fs);
+    pause(3);
+    soundsc(out, fs);
+    pause(3);
+end
