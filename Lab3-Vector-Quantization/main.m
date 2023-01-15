@@ -8,7 +8,7 @@ filelist = filelist(~[filelist.isdir]);  %remove folders from list
 % the gains of all the speech signals
 G = cell(length(filelist), 1);
 
-% For each train speech signal store all its gains
+%% For each train speech signal store all its gains
 for k = 1:length(filelist)
     baseFileName = filelist(k).name;
     fullFileName = [filelist(k).folder, '\', baseFileName];
@@ -33,7 +33,7 @@ end
 qg = cell(length(G), 1); % the quantized gains
 bits = 2; % number of bits for the quantization
 
-% Quantize every gain of the train speech signals
+%% Quantize every gain of the train speech signals
 for k = 1:length(G)
     tmp = zeros(1, length(G{k}));
     for l = 1:length(G{k})
