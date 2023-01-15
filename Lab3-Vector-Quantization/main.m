@@ -1,6 +1,6 @@
 %% Scalar Quantization
 clear; close all;
-
+fprintf('Choose Training Data Directory:\n');
 rootdir = uigetdir('.', 'Choose Training Data Directory'); %gets directory
 filelist = dir(fullfile(rootdir, '**\*.wav*'));  %get list of files and folders in any subfolder
 filelist = filelist(~[filelist.isdir]);  %remove folders from list
@@ -57,7 +57,8 @@ legend('Before Quantization', 'After Quantization');
 
 %% Read Test Set files
 close all;
-rootdir = uigetdir('.', 'Choose Testing Data Directory'); %gets directory
+fprintf('Choose Test Data Directory:\n');
+rootdir = uigetdir('.', 'Choose Test Data Directory'); %gets directory
 filelist = dir(fullfile(rootdir, '**\*.wav*'));  %get list of files and folders in any subfolder
 filelist = filelist(~[filelist.isdir]);  %remove folders from list
 
