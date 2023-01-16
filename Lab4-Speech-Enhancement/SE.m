@@ -1,7 +1,7 @@
 % code to generate the noisy signal
 
 % read the file: it has 1000 zero samples in the beginning
-[s,fs]=wavread('furelise-1000z.wav');
+[s,fs] = audioread('data/furelise-1000z.wav');
 
 % listen to the file
 soundsc(s,fs); % nice ee?
@@ -26,6 +26,6 @@ soundsc(sn,fs); % bad ee?
 sn = sn/(1.1*max(abs(sn)));
 
 % save it for your work:
-wavwrite(sn,fs,16,'furelise-1000z-noise.wav');
+audiowrite(sn,fs,16,'furelise-1000z-noise.wav');
 
 % so, clean it with Spectral subtraction and Wiener filtering.
