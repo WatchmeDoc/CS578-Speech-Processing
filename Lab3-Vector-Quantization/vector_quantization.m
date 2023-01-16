@@ -3,9 +3,17 @@ function [q] = vector_quantization(data, codebook)
 % value of the input data.
 % INPUT:
 %   data: 1xOrderLPC vector to quantize
-%   codebook: A cell containing 2^B codevectors sized 1xOrderLPC
+%   codebook: A 2^B x OrderLPC matrix containing codevectors
 % OUTPUT:
 %   q: data vector quantized
-q = data;
 
+    q = codebook(1, :);
+    min_distance = sqrt(sum((q - data.') .^ 2));
+    for l=2:length(codebook)
+        new_distance = sqrt(sum((codebook(l, :) - data.') .^ 2));
+        if (new_distance < min_distance)
+            min_distance = new_distance;
+            q = codebook(l, :);
+        end
+    end
 end

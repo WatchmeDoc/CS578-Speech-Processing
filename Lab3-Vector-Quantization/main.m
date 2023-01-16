@@ -1,6 +1,7 @@
 %% Clearing and params:
 clear; close all;
 num_bits = 6;
+order_lpc = 10;
 
 %% Analysis
 
@@ -14,6 +15,7 @@ G = cell(length(filelist), 1);
 comp_coeffs = cell(length(filelist), 1);
 fprintf('Analyzing Speech files:\n');
 fprintf('------------------------------------\n');
+total_rows = 0;
 for k = 1:length(filelist)
     baseFileName = filelist(k).name;
     fullFileName = [filelist(k).folder, '\', baseFileName];
@@ -21,9 +23,20 @@ for k = 1:length(filelist)
     [new_g, new_coeffs] = speech_analysis(fullFileName);
     G{k} = new_g;
     comp_coeffs{k} = new_coeffs;
-    
+    total_rows = total_rows + length(new_coeffs);
 end
 
+Nfiles = length(comp_coeffs);
+shift = 0;
+stretched_coeffs = zeros(total_rows, order_lpc);
+for l = 1:Nfiles
+    Nfr = length(comp_coeffs{l});
+    for m = 1:Nfr
+        stretched_coeffs(shift + m, :) = comp_coeffs{l}{m}(:);
+    end
+    shift = shift + Nfr;
+end
+comp_coeffs = stretched_coeffs;
 %% Find scalar quantization function
 fprintf('------------------------------------\n');
 fprintf('Building Scalar Quantization...\n');
@@ -52,7 +65,7 @@ vq_codebook = construct_vq_codebook(comp_coeffs, num_bits);
 
 fprintf('Vector Quantization Training Finished\n');
 fprintf('------------------------------------\n');
-%% Check Quantization Levels and how they are applied
+%% Check Scalar Quantization Levels and how they are applied
 for k = 1:length(G)
     tmp = zeros(1, length(G{k}));
     for l = 1:length(G{k})
@@ -85,7 +98,7 @@ for k = 1:length(filelist)
     fullFileName = [filelist(k).folder, '\', baseFileName];
     fprintf(1, 'Applying Quantization to %s\t', baseFileName);
 
-    out = quantized_lpc(fullFileName, num_bits, min_G, max_G, vq_codebook);
+    out = quantized_lpc(fullFileName, order_lpc, num_bits, min_G, max_G, vq_codebook);
     [sig, fs] = audioread(fullFileName);
 
     figure; 
