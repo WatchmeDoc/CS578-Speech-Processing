@@ -9,7 +9,7 @@ function [q] = vector_quantization(data, codebook)
 
     q = codebook(1, :);
     min_distance = sqrt(sum((q - data.') .^ 2));
-    for l=2:length(codebook)
+    for l=2:size(codebook, 1)
         new_distance = sqrt(sum((codebook(l, :) - data.') .^ 2));
         if (new_distance < min_distance)
             min_distance = new_distance;
