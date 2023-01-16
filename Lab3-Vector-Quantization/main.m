@@ -11,14 +11,17 @@ filelist = filelist(~[filelist.isdir]);  %remove folders from list
 
 % the gains of all the speech signals
 G = cell(length(filelist), 1);
+comp_coeffs = cell(length(filelist), 1);
 fprintf('Analyzing Speech files:\n');
 fprintf('------------------------------------\n');
 for k = 1:length(filelist)
     baseFileName = filelist(k).name;
     fullFileName = [filelist(k).folder, '\', baseFileName];
     fprintf(1, 'Now reading %s\n', baseFileName);
-
-    G{k} = SQ_analysis(fullFileName);
+    [new_g, new_coeffs] = speech_analysis(fullFileName);
+    G{k} = new_g;
+    comp_coeffs{k} = new_coeffs;
+    
 end
 
 %% Find scalar quantization function
