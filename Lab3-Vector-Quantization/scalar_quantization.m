@@ -20,7 +20,12 @@ xi = linspace(Xmin, Xmax, levels+1);
 
 % in which space our G belongs to
 indices = find(G <= xi);
-i = indices(1);
+
+if isempty(indices)
+    i = levels + 1;
+else 
+    i = indices(1);
+end
 
 if i == 1
     i = 2;

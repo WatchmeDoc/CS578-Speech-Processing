@@ -15,7 +15,8 @@ G = cell(length(filelist), 1);
 comp_coeffs = cell(length(filelist), 1);
 fprintf('Analyzing Speech files:\n');
 fprintf('------------------------------------\n');
-total_rows = 0;
+total_rows_coeffs = 0;
+total_rows_g = 0;
 for k = 1:length(filelist)
     baseFileName = filelist(k).name;
     fullFileName = [filelist(k).folder, '\', baseFileName];
@@ -23,12 +24,23 @@ for k = 1:length(filelist)
     [new_g, new_coeffs] = speech_analysis(fullFileName);
     G{k} = new_g;
     comp_coeffs{k} = new_coeffs;
-    total_rows = total_rows + length(new_coeffs);
+    total_rows_coeffs = total_rows_coeffs + length(new_coeffs);
+    total_rows_g = total_rows_g + length(new_g);
+end
+
+shift = 0;
+stretched_g = zeros(total_rows_g, 1);
+for l = 1:length(filelist)
+    Nfr = length(G{l});
+    for m = 1:Nfr
+        stretched_g(shift + m) = G{l}(m);
+    end
+    shift = shift + Nfr;
 end
 
 Nfiles = length(comp_coeffs);
 shift = 0;
-stretched_coeffs = zeros(total_rows, order_lpc);
+stretched_coeffs = zeros(total_rows_coeffs, order_lpc);
 for l = 1:Nfiles
     Nfr = length(comp_coeffs{l});
     for m = 1:Nfr
@@ -40,17 +52,10 @@ comp_coeffs = stretched_coeffs;
 %% Find scalar quantization function
 fprintf('------------------------------------\n');
 fprintf('Building Scalar Quantization...\n');
-max_G = max(G{1});
-min_G = min(G{1});
 
-for k = 2:length(G)
-    if max(G{k}) > max_G
-        max_G = max(G{k});
-    end
-    if min(G{k}) < min_G
-        min_G = min(G{k});
-    end
-end
+std_dev = std(stretched_g);
+max_G = 4 * std_dev;
+min_G = 0;
 
 qg = cell(length(G), 1); % the quantized gains
 
@@ -76,13 +81,13 @@ end
 
 index = 7;
 % Plotting
-figure; 
+figure;
 plot(G{index}); 
 hold on;
 plot(qg{index}, 'LineWidth',2);
 hold off;
 legend('Before Quantization', 'After Quantization');
-
+title(['Scalar Quantization with ', num2str(num_bits), ' bits in range [0, 4?]']);
 
 %% Read Test Set files
 
