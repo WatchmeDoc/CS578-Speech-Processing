@@ -1,10 +1,11 @@
-function [CB] = vector_quantization(data, B)
-%
+function [q] = vector_quantization(data, codebook)
+% A function that uses the precomputed codebook to compute the quantized
+% value of the input data.
 % INPUT:
-%   data: Codebook construction data
-%   B: The number of bits, so 2^B will be the codebook size. 
+%   data: 1xOrderLPC vector to quantize
+%   codebook: A cell containing 2^B codevectors sized 1xOrderLPC
 % OUTPUT:
-%   CB: Codebook
-CB = data;
+%   q: data vector quantized
+q = data;
 
 end

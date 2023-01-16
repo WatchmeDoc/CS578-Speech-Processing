@@ -1,5 +1,9 @@
-%% Scalar Quantization
+%% Clearing and params:
 clear; close all;
+num_bits = 6;
+
+%% Analysis
+
 fprintf('Choose Training Data Directory:\n');
 rootdir = uigetdir('.', 'Choose Training Data Directory'); %gets directory
 filelist = dir(fullfile(rootdir, '**\*.wav*'));  %get list of files and folders in any subfolder
@@ -7,8 +11,8 @@ filelist = filelist(~[filelist.isdir]);  %remove folders from list
 
 % the gains of all the speech signals
 G = cell(length(filelist), 1);
-
-%% For each train speech signal store all its gains
+fprintf('Analyzing Speech files:\n');
+fprintf('------------------------------------\n');
 for k = 1:length(filelist)
     baseFileName = filelist(k).name;
     fullFileName = [filelist(k).folder, '\', baseFileName];
@@ -17,7 +21,9 @@ for k = 1:length(filelist)
     G{k} = SQ_analysis(fullFileName);
 end
 
-% Finding the max and min of all gains
+%% Find scalar quantization function
+fprintf('------------------------------------\n');
+fprintf('Building Scalar Quantization...\n');
 max_G = max(G{1});
 min_G = min(G{1});
 
@@ -31,16 +37,23 @@ for k = 2:length(G)
 end
 
 qg = cell(length(G), 1); % the quantized gains
-bits = 6; % number of bits for the quantization
 
+fprintf('Scalar Quantization Training Finished\n');
 fprintf('------------------------------------\n');
-fprintf('Quantization Training Finished\n');
+
+%% Building Vector Quantization Codebook
+fprintf('------------------------------------\n');
+fprintf('Building Vector Quantization...\n');
+
+vq_codebook = construct_vq_codebook(comp_coeffs, num_bits);
+
+fprintf('Vector Quantization Training Finished\n');
 fprintf('------------------------------------\n');
 %% Check Quantization Levels and how they are applied
 for k = 1:length(G)
     tmp = zeros(1, length(G{k}));
     for l = 1:length(G{k})
-        tmp(l) = scalar_quantization(G{k}(l), bits, min_G, max_G);
+        tmp(l) = scalar_quantization(G{k}(l), num_bits, min_G, max_G);
     end
     qg{k} = tmp;
 end
@@ -56,7 +69,7 @@ legend('Before Quantization', 'After Quantization');
 
 
 %% Read Test Set files
-close all;
+
 fprintf('Choose Test Data Directory:\n');
 rootdir = uigetdir('.', 'Choose Test Data Directory'); %gets directory
 filelist = dir(fullfile(rootdir, '**\*.wav*'));  %get list of files and folders in any subfolder
@@ -69,7 +82,7 @@ for k = 1:length(filelist)
     fullFileName = [filelist(k).folder, '\', baseFileName];
     fprintf(1, 'Applying Quantization to %s\t', baseFileName);
 
-    out = quantized_lpc(fullFileName, min_G, max_G);
+    out = quantized_lpc(fullFileName, num_bits, min_G, max_G, vq_codebook);
     [sig, fs] = audioread(fullFileName);
 
     figure; 

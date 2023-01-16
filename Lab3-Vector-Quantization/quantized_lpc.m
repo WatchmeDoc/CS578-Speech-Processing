@@ -1,4 +1,4 @@
-function out = quantized_lpc(file, min_g, max_g)
+function out = quantized_lpc(file, num_bits, min_g, max_g, vq_codebook)
 %
 % INPUT:
 %   file: input filename of a wav file
@@ -21,7 +21,6 @@ function out = quantized_lpc(file, min_g, max_g)
 
 Horizon = 30;  % 30ms - window length
 OrderLPC = 10; % order of LPC
-num_bits = 6;  % Number of bits for Scalar Quantization
 Buffer = 0;    % initialization
 out = zeros(size(sig)); % initialization
 
@@ -50,7 +49,7 @@ for l=1:Nfr
   % signal or not
   
   
-  q_coeffs = vector_quantization(g, num_bits);
+  q_coeffs = vector_quantization(g, vq_codebook);
   k = (1 - 10.^(q_coeffs))./(1 + 10.^(q_coeffs)); % Inverse companding function
   a_new = rc_to_lpc(k, OrderLPC); % LPC coef.
   
