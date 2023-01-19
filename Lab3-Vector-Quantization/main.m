@@ -108,7 +108,7 @@ for k = 1:length(filelist)
 
     figure; 
     subplot(211); plot(sig); title('Original signal');
-    subplot(212); plot(out); title(['Synthesized signal using ', num2str(num_bits)]);
+    subplot(212); plot(out); title(['Synthesized signal using ', num2str(num_bits), ' bits']);
 
     MSE = (1/size(sig,1)) * sum((sig - out).^2);
     fprintf(1, 'MSE: %f\n', MSE);
@@ -125,7 +125,7 @@ out = quantized_lpc(file, order_lpc, num_bits, min_G, max_G, vq_codebook);
 
 figure; 
 subplot(211); plot(sig); title('Original signal');
-subplot(212); plot(out); title(['Synthesized signal using ', num2str(num_bits)]);
+subplot(212); plot(out); title(['Synthesized signal using ', num2str(num_bits), ' bits']);
 
 MSE = (1/size(sig,1)) * sum((sig - out).^2);
 fprintf(1, 'MSE: %f\n', MSE);
@@ -141,7 +141,7 @@ out = quantized_lpc(file, order_lpc, num_bits, min_G, max_G, vq_codebook);
 
 figure; 
 subplot(211); plot(sig); title('Original signal');
-subplot(212); plot(out); title(['Synthesized signal using ', num2str(num_bits)]);
+subplot(212); plot(out); title(['Synthesized signal using ', num2str(num_bits), ' bits']);
 
 MSE = (1/size(sig,1)) * sum((sig - out).^2);
 fprintf(1, 'MSE: %f\n', MSE);
