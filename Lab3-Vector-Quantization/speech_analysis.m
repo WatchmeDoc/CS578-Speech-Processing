@@ -1,4 +1,4 @@
-function [G, comp_coeffs] = speech_analysis(file)
+function [G, comp_coeffs] = speech_analysis(file, OrderLPC)
 %
 % INPUT:
 %   file: input filename of a wav file
@@ -8,7 +8,6 @@ function [G, comp_coeffs] = speech_analysis(file)
 [sig, Fs] = audioread(file);
 
 Horizon = 30;  % 30ms - window length
-OrderLPC = 10; % order of LPC
 
 Horizon = Horizon*Fs/1000;
 Shift = Horizon/2;       % frame size - step size

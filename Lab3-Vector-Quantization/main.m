@@ -21,7 +21,7 @@ for k = 1:length(filelist)
     baseFileName = filelist(k).name;
     fullFileName = [filelist(k).folder, '\', baseFileName];
     fprintf(1, 'Now reading %s\n', baseFileName);
-    [new_g, new_coeffs] = speech_analysis(fullFileName);
+    [new_g, new_coeffs] = speech_analysis(fullFileName, order_lpc);
     G{k} = new_g;
     comp_coeffs{k} = new_coeffs;
     total_rows_coeffs = total_rows_coeffs + length(new_coeffs);
@@ -108,7 +108,7 @@ for k = 1:length(filelist)
 
     figure; 
     subplot(211); plot(sig); title('Original signal');
-    subplot(212); plot(out); title('Synthesized signal');
+    subplot(212); plot(out); title(['Synthesized signal using ', num2str(num_bits)]);
 
     MSE = (1/size(sig,1)) * sum((sig - out).^2);
     fprintf(1, 'MSE: %f\n', MSE);
@@ -117,3 +117,35 @@ for k = 1:length(filelist)
     soundsc(out, fs);
     pause(3);
 end
+
+%% George Manos voice
+file = 'personal/stars_16k.wav';
+out = quantized_lpc(file, order_lpc, num_bits, min_G, max_G, vq_codebook);
+[sig, fs] = audioread(file);
+
+figure; 
+subplot(211); plot(sig); title('Original signal');
+subplot(212); plot(out); title(['Synthesized signal using ', num2str(num_bits)]);
+
+MSE = (1/size(sig,1)) * sum((sig - out).^2);
+fprintf(1, 'MSE: %f\n', MSE);
+soundsc(sig, fs);
+pause(5);
+soundsc(out, fs);
+pause(5);
+
+%% Alexandros Angelakis voice
+file = 'personal/truth_16k.wav';
+out = quantized_lpc(file, order_lpc, num_bits, min_G, max_G, vq_codebook);
+[sig, fs] = audioread(file);
+
+figure; 
+subplot(211); plot(sig); title('Original signal');
+subplot(212); plot(out); title(['Synthesized signal using ', num2str(num_bits)]);
+
+MSE = (1/size(sig,1)) * sum((sig - out).^2);
+fprintf(1, 'MSE: %f\n', MSE);
+soundsc(sig, fs);
+pause(4);
+soundsc(out, fs);
+pause(4);

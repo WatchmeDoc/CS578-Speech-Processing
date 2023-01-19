@@ -33,5 +33,4 @@ end
 
 % our quantized G by taking the mean
 qg = (xi(i) + xi(i - 1)) / 2;
-
 end
