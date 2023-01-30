@@ -1,22 +1,4 @@
-function out = lpc_spectral_subtraction(sig, noise, Fs)
-%
-% INPUT:
-%   file: input filename of a wav file
-% OUTPUT:
-%   out: a vector contaning the output signal
-%
-% Example:
-%   
-%   out = lpc_as('speechsample.wav');
-%   [sig,fs]= wavread('speechsample.wav');
-%   sound(out,fs);
-%   sound(sig,fs);
-%   sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
-%
-%
-% Yannis Stylianou
-% CSD - CS 578
-%
+function out = spectral_subtraction(sig, noise, Fs)
 
 Horizon = 30;  %30ms - window length
 Buffer = 0;    % initialization

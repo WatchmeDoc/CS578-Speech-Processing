@@ -12,10 +12,10 @@ pause(35);
 noise = s_noise(1:1000);
 
 % Calculating the noise power spectra
-noise_power_spectra = lpc_power_spectra(noise, fs);
+noise_power_spectra = power_spectra(noise, fs);
 
 % Spectral Subtraction for removing the noise
-s_clean = lpc_spectral_subtraction(s_noise, noise_power_spectra, fs);
+s_clean = spectral_subtraction(s_noise, noise_power_spectra, fs);
 
 % Listen to the clear signal
 soundsc(s_clean, fs);
