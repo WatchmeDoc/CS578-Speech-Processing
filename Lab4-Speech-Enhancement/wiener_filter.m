@@ -1,4 +1,4 @@
-function out = spectral_subtraction(sig, noise, Fs)
+function out = wiener_filter(sig, noise, Fs)
 
 Horizon = 30;  %30ms - window length
 Buffer = 0;    % initialization
@@ -12,21 +12,33 @@ Lsig = length(sig);
 slice = 1:Horizon;
 tosave = 1:Shift;
 Nfr = floor((Lsig-Horizon)/Shift)+1;  % number of frames
+a = 0.5;
+wiener_filter = zeros(length(Win), Nfr);
+Sx = zeros(length(Win), Nfr);
 
 % analysis frame-by-frame
 for l=1:Nfr
-    
+   
   s = Win.*sig(slice);
   
   % analysis
-  sig_abs = abs(fft(s));
-  sig_angle = angle(fft(s));
+  sig_fft = fft(s);
+  sig_abs = abs(sig_fft);
+  sig_angle = angle(sig_fft);
   
-  spectral_subtraction = sig_abs.^2 - noise;
-  spectral_subtraction = max(spectral_subtraction, 0); % if sig_abs.^2 - noise < 0 set it to 0
+  % Initialization of wiener filter with spectral subtraction
+  if l == 1   
+      spectral_subtraction = sig_abs.^2 - noise;
+      spectral_subtraction = max(spectral_subtraction, 0); % if sig_abs.^2 - noise < 0 set it to 0
+      Sx(:,l) = spectral_subtraction;
+  else
+      X = sig_fft .* wiener_filter(:,l-1);
+      Sx(:,l) = ((abs(X)).^2);
+      Sx(:,l) = a * Sx(:,l-1) + (1-a) * Sx(:,l);
+  end
   
-  % writing it in polar form
-  clean_sig = sqrt(spectral_subtraction) .* exp(1i * sig_angle);
+  wiener_filter(:,l) = Sx(:,l) ./ (Sx(:,l) + noise);
+  clean_sig = sqrt(Sx(:,l)) .* exp(1i * sig_angle);
   clean_sig = real(ifft(clean_sig));
   
   % synthesis
