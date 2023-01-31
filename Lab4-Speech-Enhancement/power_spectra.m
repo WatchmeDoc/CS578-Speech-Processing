@@ -13,11 +13,9 @@ Nfr = floor((Lsig-Horizon)/Shift)+1;  % number of frames
 % analysis frame-by-frame
 for l=1:Nfr
     
-  sigLPC = Win.*sig(slice);
-  
-  [acf, lags] = xcorr(sigLPC);
-  acf = acf(lags >= 0);
-  sigFFT(:,l) = (abs(fft(acf))).^2;
+  s = Win.*sig(slice);
+ 
+  sigFFT(:,l) = (abs(fft(s))).^2;
   
   slice = slice+Shift;   % move the frame  
 end

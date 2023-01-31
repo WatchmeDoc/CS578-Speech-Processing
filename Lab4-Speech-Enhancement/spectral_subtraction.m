@@ -16,11 +16,11 @@ Nfr = floor((Lsig-Horizon)/Shift)+1;  % number of frames
 % analysis frame-by-frame
 for l=1:Nfr
     
-  sigLPC = Win.*sig(slice);
+  s = Win.*sig(slice);
   
-  % LPC analysis
-  sig_abs = abs(fft(sigLPC));
-  sig_angle = angle(fft(sigLPC));
+  % analysis
+  sig_abs = abs(fft(s));
+  sig_angle = angle(fft(s));
   
   spectral_subtraction = sig_abs.^2 - noise;
   spectral_subtraction = max(spectral_subtraction, 0); % if sig_abs.^2 - noise < 0 set it to 0
