@@ -1,11 +1,18 @@
-function out = spectral_subtraction(sig, noise, Fs)
+function out = spectral_subtraction(sig, Sb, Fs)
+%
+% INPUT:
+%   sig: the signal we want to enhance using spectral subtraction
+%   Sb:  the noise power spectra
+%   Fs:  the sampling frequency
+% OUTPUT:
+%   out: the enhanced signal
 
 Horizon = 30;  %30ms - window length
 Buffer = 0;    % initialization
 out = zeros(size(sig)); % initialization
 
-Horizon = round(Horizon*Fs/1000);
-Shift = round(Horizon/2);       % frame size - step size
+Horizon = floor(Horizon*Fs/1000);
+Shift = floor(Horizon/2);       % frame size - step size
 Win = hanning(Horizon);  % analysis window
 
 Lsig = length(sig);
@@ -22,7 +29,7 @@ for l=1:Nfr
   sig_abs = abs(fft(s));
   sig_angle = angle(fft(s));
   
-  spectral_subtraction = sig_abs.^2 - noise;
+  spectral_subtraction = sig_abs.^2 - Sb;
   spectral_subtraction = max(spectral_subtraction, 0); % if sig_abs.^2 - noise < 0 set it to 0
   
   % writing it in polar form
@@ -32,7 +39,7 @@ for l=1:Nfr
   % synthesis
   clean_sig(1:Shift) = clean_sig(1:Shift) + Buffer;  % Overlap and add
   out(tosave) = clean_sig(1:Shift);          % save the first part of the frame
-  Buffer = clean_sig(Shift:Horizon);       % buffer the rest of the frame
+  Buffer = clean_sig(Shift+1:Horizon);       % buffer the rest of the frame
   
   slice = slice+Shift;   % move the frame
   tosave = tosave+Shift;

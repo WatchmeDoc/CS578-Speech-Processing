@@ -1,9 +1,15 @@
 function out = power_spectra(sig, Fs)
+%
+% INPUT:
+%   sig: the input signal
+%   Fs:  the sampling frequency
+% OUTPUT:
+%   out: the power spectra of the input signal
 
 Horizon = 30;  %30ms - window length
 
-Horizon = ceil(Horizon*Fs/1000);
-Shift = ceil(Horizon/2);       % frame size - step size
+Horizon = floor(Horizon*Fs/1000);
+Shift = floor(Horizon/2);       % frame size - step size
 Win = hanning(Horizon);  % analysis window
 
 Lsig = length(sig);
