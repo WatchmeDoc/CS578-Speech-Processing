@@ -16,9 +16,38 @@ for k = 1:length(filelist)
     fullFileName = [filelist(k).folder, '\', baseFileName];
     [~, name, ~] = fileparts(fullFileName);
     fprintf(1, 'Now reading %s\n', baseFileName);
-    mffc_arr = feature_extraction(fullFileName);
+    mfcc_arr = feature_extraction(fullFileName);
     savepath = ['features/', name, '.mat'];
-    save(savepath, 'mffc_arr');
+    save(savepath, 'mfcc_arr');
 end
 
 %% Train
+
+fprintf('Choose Training Data Directory:\n');
+myDir = uigetdir; %gets directory
+myFiles = dir(fullfile(myDir,'*.mat')); %gets all mat files in struct
+
+% the gains of all the speech signals 
+fprintf('Analyzing Speech files:\n');
+fprintf('------------------------------------\n');
+
+mixtures = 12;
+
+for k = 1:length(myFiles)
+    baseFileName = myFiles(k).name;
+    fullFileName = fullfile(myDir, baseFileName);
+    fprintf(1, 'Now reading %s\n', baseFileName);
+    
+    features = load(baseFileName);
+    
+    [means_arr, variances_arr, weights_arr] = GMM_training(features, mixtures);
+    
+    savepath = ['GMM/means/', baseFileName];
+    save(savepath, 'means_arr');
+    
+    savepath = ['GMM/variances/', baseFileName];
+    save(savepath, 'variances_arr');
+    
+    savepath = ['GMM/weights/', baseFileName];
+    save(savepath, 'weights_arr');
+end

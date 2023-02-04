@@ -30,15 +30,11 @@ Lsig = length(sig);
 slice = 1:Horizon;
 Nfr = floor((Lsig-Horizon)/Shift)+1;  % number of frames
 
-out = cell(Nfr, 1); % initialization
-% analysis frame-by-frame
-for l=1:Nfr
-    
-  sigLPC = Win.*sig(slice);
-  
-  mfcc = v_melcepst(sigLPC,fs);  %mel-scale Frequency Cepstral Coefficients
-  out{l} = mfcc;
-  
-  slice = slice+Shift;   % move the frame
-  
+cesptral_coeff = 12;
+
+out = zeros(Nfr, cesptral_coeff);
+
+mfcc = v_melcepst(sig,fs, 'M', cesptral_coeff, floor(3*log(fs)), Horizon, Shift);  %mel-scale Frequency Cepstral Coefficients
+out = mfcc;
+
 end
