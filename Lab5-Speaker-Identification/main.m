@@ -1,3 +1,6 @@
+%% Clear
+close all; clear;
+
 %% Feature Extraction
 
 fprintf('Choose Training Data Directory:\n');
@@ -11,6 +14,11 @@ fprintf('------------------------------------\n');
 for k = 1:length(filelist)
     baseFileName = filelist(k).name;
     fullFileName = [filelist(k).folder, '\', baseFileName];
+    [~, name, ~] = fileparts(fullFileName);
     fprintf(1, 'Now reading %s\n', baseFileName);
     mffc_arr = feature_extraction(fullFileName);
+    savepath = ['features/', name, '.mat'];
+    save(savepath, 'mffc_arr');
 end
+
+%% Train
