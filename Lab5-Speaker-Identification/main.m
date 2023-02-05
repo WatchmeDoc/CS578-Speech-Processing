@@ -42,7 +42,7 @@ mixtures = 12;
 for k = 1:length(myFiles)
     baseFileNameMean = myFiles(k).name;
     fullFileNameMean = fullfile(myDir, baseFileNameMean);
-    fprintf(1, 'Now reading %s\n', baseFileNameMean);
+    fprintf(1, 'Now reading features for sample %s\n', baseFileNameMean);
     
     features = load(fullFileNameMean);
     
@@ -74,7 +74,7 @@ fprintf('------------------------------------\n');
 for k = 1:length(myFiles)
     baseFileName = myFiles{k};
     fullFileName = fullfile(myDir, baseFileName);
-    fprintf(1, 'Now reading %s\n', fullFileName);
+    fprintf(1, 'Now reading GMM weights for sample %s\n', baseFileName);
     
     means = load([fullFileName, '\means.mat']);
     vars = load([fullFileName, '\variances.mat']);
