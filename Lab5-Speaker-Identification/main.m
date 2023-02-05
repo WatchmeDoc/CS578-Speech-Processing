@@ -8,7 +8,10 @@ fprintf('Choose Training Data Directory:\n');
 rootdir = uigetdir('.', 'Choose Training Data Directory'); %gets directory
 filelist = dir(fullfile(rootdir, '**\*.wav*'));  %get list of files and folders in any subfolder
 filelist = filelist(~[filelist.isdir]);  %remove folders from list
-
+if exist('features', 'dir')
+   rmdir('features', 's'); 
+end
+mkdir('features');
 % the gains of all the speech signals 
 fprintf('Analyzing Speech files:\n');
 fprintf('------------------------------------\n');
