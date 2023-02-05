@@ -12,6 +12,10 @@ filelist = filelist(~[filelist.isdir]);  %remove folders from list
 % the gains of all the speech signals 
 fprintf('Analyzing Speech files:\n');
 fprintf('------------------------------------\n');
+if exist('features/', 'dir')
+   rmdir('features/', 's');
+end
+mkdir('features/');
 for k = 1:length(filelist)
     baseFileNameMean = filelist(k).name;
     fullFileNameMean = [filelist(k).folder, '\', baseFileNameMean];
@@ -19,10 +23,6 @@ for k = 1:length(filelist)
     fprintf(1, 'Now reading %s\n', baseFileNameMean);
     mfcc_arr = feature_extraction(fullFileNameMean);
     savepath = ['features/', name, '.mat'];
-    if exist(savepath, 'dir')
-       rmdir(savepath, 's');
-    end
-    mkdir(savepath);
     save(savepath, 'mfcc_arr');
 end
 
@@ -42,7 +42,7 @@ mixtures = 12;
 for k = 1:length(myFiles)
     baseFileNameMean = myFiles(k).name;
     fullFileNameMean = fullfile(myDir, baseFileNameMean);
-    fprintf(1, 'Now reading features for sample %s\n', baseFileNameMean);
+    fprintf(1, 'Now reading features %s\n', baseFileNameMean);
     
     features = load(fullFileNameMean);
     
@@ -74,7 +74,7 @@ fprintf('------------------------------------\n');
 for k = 1:length(myFiles)
     baseFileName = myFiles{k};
     fullFileName = fullfile(myDir, baseFileName);
-    fprintf(1, 'Now reading GMM weights for sample %s\n', baseFileName);
+    fprintf(1, 'Now reading GMM parameters for sample %s\n', baseFileName);
     
     means = load([fullFileName, '\means.mat']);
     vars = load([fullFileName, '\variances.mat']);
