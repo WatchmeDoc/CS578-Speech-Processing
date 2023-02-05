@@ -6,20 +6,12 @@ clear; close all;
 
 fprintf('Choose Training Data Directory:\n');
 rootdir = uigetdir('.', 'Choose Training Data Directory'); %gets directory
-if exist('features', 'dir')
-   rmdir('features', 's'); 
-end
-mkdir('features');
 filelist = dir(fullfile(rootdir, '**\*.wav*'));  %get list of files and folders in any subfolder
 filelist = filelist(~[filelist.isdir]);  %remove folders from list
 
 % the gains of all the speech signals 
 fprintf('Analyzing Speech files:\n');
 fprintf('------------------------------------\n');
-if exist('features/', 'dir')
-   rmdir('features/', 's');
-end
-mkdir('features/');
 for k = 1:length(filelist)
     baseFileNameMean = filelist(k).name;
     fullFileNameMean = [filelist(k).folder, '\', baseFileNameMean];
@@ -65,24 +57,24 @@ end
 %% Predict
 clear; close all;
 
-fprintf('Choose GMM parameters Directory:\n');
-myDir = 'GMM'; %gets directory
-myFiles = dir(myDir); %gets all mat files in struct
-myFiles = {myFiles.name}';
-myFiles(ismember(myFiles,{'.','..'})) = [];
+
+%% Feature Extraction
+clear; close all;
+
+fprintf('Choose Testing Data Directory:\n');
+rootdir = uigetdir('.', 'Choose Testing Data Directory'); %gets directory
+filelist = dir(fullfile(rootdir, '**\*.wav*'));  %get list of files and folders in any subfolder
+filelist = filelist(~[filelist.isdir]);  %remove folders from list
 
 % the gains of all the speech signals 
-fprintf('Analyzing parameter .mat files:\n');
+fprintf('Analyzing Speech files:\n');
 fprintf('------------------------------------\n');
-for k = 1:length(myFiles)
-    baseFileName = myFiles{k};
-    fullFileName = fullfile(myDir, baseFileName);
-    fprintf(1, 'Now reading GMM parameters for sample %s\n', baseFileName);
-    
-    means = load([fullFileName, '\means.mat']);
-    vars = load([fullFileName, '\variances.mat']);
-    weights = load([fullFileName, '\weights.mat']);
-    
-    %%% GMM testing here
+for k = 1:length(filelist)
+    baseFileNameMean = filelist(k).name;
+    fullFileNameMean = [filelist(k).folder, '\', baseFileNameMean];
+    [~, name, ~] = fileparts(fullFileNameMean);
+    fprintf(1, 'Now reading %s\n', baseFileNameMean);
+    mfcc_arr = feature_extraction(fullFileNameMean);
+    label = GMM_predict(mfcc_arr);
+    fprintf('\tPrediction: %s\n', label);
 end
-
