@@ -85,7 +85,7 @@ for k = 1:length(filelist)
     label = regexp(label,'_','split');
     label = label{1};
     correct_pred = strcmp(label, true_label);
-    fprintf('\tIs Correct: %s\n', string(label));
+    fprintf('\tIs Correct: %s\n', string(correct_pred));
     if (correct_pred)
         accuracy = accuracy + 1;
     end
