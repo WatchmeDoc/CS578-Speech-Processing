@@ -6,6 +6,10 @@ clear; close all;
 
 fprintf('Choose Training Data Directory:\n');
 rootdir = uigetdir('.', 'Choose Training Data Directory'); %gets directory
+if exist('features', 'dir')
+   rmdir('features', 's'); 
+end
+mkdir('features');
 filelist = dir(fullfile(rootdir, '**\*.wav*'));  %get list of files and folders in any subfolder
 filelist = filelist(~[filelist.isdir]);  %remove folders from list
 
@@ -29,10 +33,12 @@ end
 %% Train
 clear; close all;
 
-fprintf('Choose Feature Data Directory:\n');
-myDir = uigetdir; %gets directory
+myDir = 'features/'; %gets directory
 myFiles = dir(fullfile(myDir,'*.mat')); %gets all mat files in struct
-
+if exist('GMM', 'dir')
+   rmdir('GMM', 's'); 
+end
+mkdir('GMM');
 % the gains of all the speech signals 
 fprintf('Analyzing feature .mat files:\n');
 fprintf('------------------------------------\n');
@@ -49,9 +55,6 @@ for k = 1:length(myFiles)
     [means_arr, variances_arr, weights_arr] = GMM_training(features, mixtures);
     [~, name, ~] = fileparts(fullFileNameMean);
     savepath = ['GMM/', name];
-    if exist(savepath, 'dir')
-       rmdir(savepath, 's'); 
-    end
     mkdir(savepath);
     save([savepath, '/means.mat'], 'means_arr');
     
@@ -63,7 +66,7 @@ end
 clear; close all;
 
 fprintf('Choose GMM parameters Directory:\n');
-myDir = uigetdir; %gets directory
+myDir = 'GMM'; %gets directory
 myFiles = dir(myDir); %gets all mat files in struct
 myFiles = {myFiles.name}';
 myFiles(ismember(myFiles,{'.','..'})) = [];
