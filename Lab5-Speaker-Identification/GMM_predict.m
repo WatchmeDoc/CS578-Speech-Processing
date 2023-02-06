@@ -45,9 +45,9 @@ for k = 1:length(myFiles)
             else
                 vars_slice = vars(:, :, j);
             end
-            proba = proba + log(weights(j) * gauss_proba(means(j, :), vars_slice, frame_mfcc));
+            proba = proba + weights(j) * gauss_proba(means(j, :), vars_slice, frame_mfcc);
         end
-        total_prob = total_prob + proba;
+        total_prob = total_prob + log(proba);
     end
     
     if (total_prob > max)
