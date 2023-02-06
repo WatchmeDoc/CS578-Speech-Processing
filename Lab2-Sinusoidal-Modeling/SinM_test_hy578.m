@@ -1,4 +1,4 @@
-function [ Y SNR_by_frame ] = SinM_test(X, Fs, N, S, L, W)
+function [ Y, SNR_by_frame ] = SinM_test(X, Fs, N, S, L, W)
 %	SinM_test(X, Fs, N, S, L, W)
 %
 %	Sinusoidal Model test
@@ -29,7 +29,7 @@ S = floor(S*Fs);
 if nargin < 6 || length(W) ~= N, W = hanning(N); end % hanning window
 
 SinM = SinM_analysis(X, Fs, N, S, L, W);
-[ Y SNR_by_frame ] = SinM_synthesis_PI(SinM, N, S, Fs, X);
+[ Y, SNR_by_frame ] = SinM_synthesis_PI(SinM, N, S, Fs, X);
 return
 
 function [ SinM ] = SinM_analysis(X, Fs, N, S, L, W)
@@ -88,8 +88,8 @@ function [ AMP, PH, F ] = SinM_analysis_frame(Xf, Fs, N, L, W)
 %	AMP:[Lx1]  the sampled amplitudes
 %	PH:	[Lx1]  the sampled phases
 %	F:	[Lx1]  the sampled frequencies
-if nargin < 4, L = 80; end;
-if nargin < 5, W = hanning(2*N+1); end;
+if nargin < 4, L = 80; end
+if nargin < 5, W = hanning(2*N+1); end
 Wn = W ./ sum(W); % normalize window to 1
 NFFT = 2048; % 2^(ceil(log2(2*N+1)));
 Wf = Xf .* Wn;
@@ -98,11 +98,11 @@ Sw(1:N+1) = Wf(N+1:2*N+1);
 Sw(NFFT-N+1:NFFT) = Wf(1:N);
 S_all = fft(Sw, NFFT);
 S = S_all(1:NFFT/2+1);
-[ FBins AMP PH ] = SinM_peakPicking(S, L);
+[ FBins, AMP, PH ] = SinM_peakPicking(S, L);
 F = (FBins-1)*Fs/NFFT;
 return
 
-function [ F AMP PH ] = SinM_peakPicking(S, L)
+function [ F, AMP, PH ] = SinM_peakPicking(S, L)
 %   [ F AMP PH ] = SinM_peakPicking(S, L)
 %
 %   Returns the L highest amplitude peaks of the spectrum S, along with
@@ -120,13 +120,13 @@ F = [];
 AMP = [];
 PH = [];
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-%   INSERT CODE HERE    %
-%%%%%%%%%%%%%%%%%%%%%%%%%
+% Insert code here:
+[AMP, F] = maxk(S, L);
+PH = angle(S);
 
 return
 
-function [ Y SNR_by_frame ] = SinM_synthesis_PI(SinM, N, S, Fs, X)
+function [ Y, SNR_by_frame ] = SinM_synthesis_PI(SinM, N, S, Fs, X)
 %	[ Y SNR_by_frame ] = SinM_synthesis_PI(SinM, N, S, Fs, X)
 %
 %	SinM synthesis Parameter Interpolation
