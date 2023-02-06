@@ -234,7 +234,7 @@ function [SinM_prev_new, SinM_curr_new] = SinM_FrameToFramePeakMatching(SinM_pre
 %   SinM_curr_new:	[structure] contains the matched SinM parameters for the current frame
 %
 %   Note: Zeros are inserted in birth and death matchings.
-if nargin<5, Delta = 10; end;
+if nargin<5, Delta = 10; end
 
 L_1 = length(SinM_prev.F);
 L_2 = length(SinM_curr.F);
