@@ -121,7 +121,9 @@ AMP = [];
 PH = [];
 
 % Insert code here:
-[AMP, F] = maxk(S, L);
+[AMP, F] = findpeaks(S);
+[AMP, locs] = maxk(AMP, L);
+F = F(locs);
 PH = angle(S);
 
 return
