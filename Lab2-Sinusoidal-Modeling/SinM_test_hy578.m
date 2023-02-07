@@ -240,7 +240,7 @@ for l=1:L
     
     % Add the results to y
     % 
-    Yf(:) = Yf + 2*A_tilde .* cos(theta_tilde);
+    Yf(:) = Yf + (2*A_tilde .* cos(theta_tilde)).';
 end
 
 return
@@ -287,7 +287,7 @@ I_2 = zeros(L_2, 1);
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %   INSERT CODE HERE    %
 %%%%%%%%%%%%%%%%%%%%%%%%%
-for n = 1:L_0
+for n = 1:L_1
     % step 1: finding candidate frequencies (if any)
     matching_interval = [F_1(n) - Delta, F_1(n) + Delta];
     idxs_F_matched = find(F_2 >= matching_interval(1) & F_2 <= matching_interval(2));
