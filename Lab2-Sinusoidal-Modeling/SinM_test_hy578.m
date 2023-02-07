@@ -221,7 +221,7 @@ for l=1:L
     t = 0:N-1;
     
     % Linear interpolation on A
-    A_tilde = amp_l1 + (amp_l2 - amp_l1) / N * t;
+    A_tilde = amp_l1 + ((amp_l2 - amp_l1) / N) * t;
     
     % Frequencies in discrete time
     w_1 = 2*pi*F_l1 / Fs;
