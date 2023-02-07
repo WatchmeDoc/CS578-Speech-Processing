@@ -249,9 +249,53 @@ F_2 = SinM_curr.F;
 I_1 = zeros(L_1, 1);
 I_2 = zeros(L_2, 1);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-%   INSERT CODE HERE    %
-%%%%%%%%%%%%%%%%%%%%%%%%%
+for n = 1:L_1
+    % step 1: finding candidate frequencies (if any)
+    matching_interval = [F_1(n) - Delta, F_1(n) + Delta];
+    idxs_F_matched = find(Y >= matching_interval(1) & Y <= matching_interval(2));
+    if isempty(idxs_F_matched)
+        % death of F_1(n) and zero amplitude 
+    else
+        distances = zeros(length(idxs_F_matched));
+        % candidate frequency
+        for m = 1:length(idxs_F_matched)
+            distances(m) = abs(F_1(n) - F_2(idxs_F_matched(m)));
+        end
+        [~, index] = min(distances);
+        candidate_freq = F_2(idxs_F_matched(index));
+        
+        flag = 0;
+        % step 2: confirming candidate frequency
+        for i = n+1:L_1
+            distance1 = abs(candidate_freq - F_1(i));
+            distance2 = abs(candidate_freq - F_1(n));
+            if distance2 >= distance1
+                % change of candidate
+                flag = 1;
+                % assign candidate frequency to F_1(i)
+                % store i somewhere
+            end
+        end
+        
+        if flag == 1
+            if length(idxs_F_matched) == 1
+                % Additional case #1
+                % If there was no other frequency in the matching interval 
+                % and candidate frequency has been assigned to different F_1 
+                % death of F_1(n) and zero amplitude
+            else
+                % Additional case #2
+                % If there is other frequencies in the matching interval, then
+                % assign the closest to F_1(n) and go to step 1.
+                [~, indices] = mink(distances, 2);
+                F_1(n) = F_2(idxs_F_matched(indices(2)));
+            end      
+        end
+    end
+end
+
+% step 3: Check for no matched frequencies and make births :D
+
 
 AMP_1_new = zeros(L_new,1);
 AMP_2_new = zeros(L_new,1);
