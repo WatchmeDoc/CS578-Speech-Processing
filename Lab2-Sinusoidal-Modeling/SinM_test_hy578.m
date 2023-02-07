@@ -239,7 +239,7 @@ for l=1:L
     
     % Add the results to y
     % 
-    Yf(:) = Yf + A_tilde .* cos(theta_tilde);
+    Yf(:) = Yf + 2*A_tilde .* cos(theta_tilde);
 end
 
 return
