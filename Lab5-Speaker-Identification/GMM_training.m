@@ -20,7 +20,7 @@ function [means, variances, weights] = GMM_training(features, k)
 
 mfccs = features.mfcc_arr;
 
-[m, v, w] = v_gaussmix(mfccs,[], [], k);  %mel-scale Frequency Cepstral Coefficients
+[m, v, w] = v_gaussmix(mfccs,[], [], k, 'v');  %mel-scale Frequency Cepstral Coefficients
 
 means = m;
 variances = v;

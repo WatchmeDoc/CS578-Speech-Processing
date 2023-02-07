@@ -25,7 +25,7 @@ Horizon = 20;  %window length
 Horizon = Horizon*fs/1000;
 Shift = 5;               % step size
 
-cesptral_coeff = 12;
+cesptral_coeff = 5;
 
 mfcc = v_melcepst(sig,fs, 'M', cesptral_coeff, floor(3*log(fs)), Horizon, Shift);  %mel-scale Frequency Cepstral Coefficients
 

@@ -41,7 +41,7 @@ mkdir('GMM');
 fprintf('Analyzing feature .mat files:\n');
 fprintf('------------------------------------\n');
 
-mixtures = 12;
+mixtures = 5;
 
 for k = 1:length(myFiles)
     baseFileName = myFiles(k).name;

@@ -207,6 +207,30 @@ Yf = zeros(N,1);
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %   INSERT CODE HERE    %
 %%%%%%%%%%%%%%%%%%%%%%%%%
+L = length(AMP_1);
+for l=1:L
+    F_l1 = F_1(l);
+    F_l2 = F_2(l);
+    ph_l1 = PH_1(l);
+    ph_l2 = PH_2(l);
+    amp_l1 = AMP_1(l);
+    amp_l2 = AMP_2(l);
+    t = 0:N-1;
+    
+    w_1 = 2*pi*F_l1 / Fs;
+    w_2 = 2*pi*F_l2 / Fs;
+    
+    x_star = 1 / (2*pi) * ((ph_l1 + w_1 * N - ph_l2) + (w_2 - w_1)*N/2);
+    M = round(x_star);
+    A_tilde = amp_l1 + (amp_l2 - amp_l1) / N * t;
+
+    res = [3/T^2 -1/T; -2/T^3 1/T^2] * [ph_l2 - ph_l1 - w_1*N + 2*pi*M; w_2 - w_1];
+    a = res(1);
+    b = res(2);
+    theta_tilde = ph_l1 + w_1 * t + a * t.^2 + b * t.^3;
+
+    Yf(:) = Yf + A_tilde .* cos(theta_tilde);
+end
 
 return
 
