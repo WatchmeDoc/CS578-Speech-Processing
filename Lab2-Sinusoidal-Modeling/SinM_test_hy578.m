@@ -1,4 +1,4 @@
-function [ Y, SNR_by_frame ] = SinM_test(X, Fs, N, S, L, W)
+function [ Y, SNR_by_frame ] = SinM_test_hy578(X, Fs, N, S, L, W)
 %	SinM_test(X, Fs, N, S, L, W)
 %
 %	Sinusoidal Model test
@@ -284,13 +284,14 @@ F_2 = SinM_curr.F;
 I_1 = zeros(L_1, 1);
 I_2 = zeros(L_2, 1);
 
-for n = 1:L_1
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%   INSERT CODE HERE    %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+for n = 1:L_0
     % step 1: finding candidate frequencies (if any)
     matching_interval = [F_1(n) - Delta, F_1(n) + Delta];
-    idxs_F_matched = find(Y >= matching_interval(1) & Y <= matching_interval(2));
-    if isempty(idxs_F_matched)
-        % death of F_1(n) and zero amplitude 
-    else
+    idxs_F_matched = find(F_2 >= matching_interval(1) & F_2 <= matching_interval(2));
+    if ~isempty(idxs_F_matched)
         distances = zeros(length(idxs_F_matched));
         % candidate frequency
         for m = 1:length(idxs_F_matched)
@@ -299,38 +300,38 @@ for n = 1:L_1
         [~, index] = min(distances);
         candidate_freq = F_2(idxs_F_matched(index));
         
-        flag = 0;
         % step 2: confirming candidate frequency
+        original_dist = abs(candidate_freq - F_1(n));
         for i = n+1:L_1
-            distance1 = abs(candidate_freq - F_1(i));
-            distance2 = abs(candidate_freq - F_1(n));
-            if distance2 >= distance1
+            new_dist = abs(candidate_freq - F_1(i));
+            if original_dist >= new_dist
                 % change of candidate
-                flag = 1;
-                % assign candidate frequency to F_1(i)
-                % store i somewhere
+                break;
             end
         end
         
-        if flag == 1
-            if length(idxs_F_matched) == 1
-                % Additional case #1
-                % If there was no other frequency in the matching interval 
-                % and candidate frequency has been assigned to different F_1 
-                % death of F_1(n) and zero amplitude
-            else
+        % If we've changed the original candidate
+        if i <= L_1
+            if length(idxs_F_matched) > 1
                 % Additional case #2
-                % If there is other frequencies in the matching interval, then
+                % If there are other frequencies in the matching interval, then
                 % assign the closest to F_1(n) and go to step 1.
                 [~, indices] = mink(distances, 2);
-                F_1(n) = F_2(idxs_F_matched(indices(2)));
-            end      
+                I_1(n) = idxs_F_matched(indices(2));
+                I_2(idxs_F_matched(indices(2))) = n;
+%                 I_2(idxs_F_matched(index)) = i;
+%                 I_1(i) = idxs_F_matched(index);
+            end
+        else
+            I_1(n) = idxs_F_matched(index);
+            I_2(idxs_F_matched(index)) = n;
         end
+        
     end
 end
 
-% step 3: Check for no matched frequencies and make births :D
-
+% step 3: Check for no matched frequencies and make births/deaths
+L_new = length(I_2) + length(find(I_1 == 0));
 
 AMP_1_new = zeros(L_new,1);
 AMP_2_new = zeros(L_new,1);
@@ -342,6 +343,42 @@ F_2_new = zeros(L_new,1);
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %   INSERT CODE HERE    %
 %%%%%%%%%%%%%%%%%%%%%%%%%
+i = 1;
+j = 1;
+for k = 1:L_new
+    if (i <= L_1 && I_1(i) == 0)
+        % Death
+        F_1_new(k) = F_1(i);
+        F_2_new(k) = F_1(i);
+        AMP_1_new(k) = AMP_1(i);
+        AMP_2_new(k) = 0;
+        PH_1_new(k) = PH_1(i);
+        PH_2_new(k) = (2*pi*F_1(i)/Fs)*S + PH_1(i);
+        i = i + 1;
+    elseif (j <= L_2 && I_2(j) == 0) 
+        % Birth
+        F_1_new(k) = F_2(j);
+        F_2_new(k) = F_2(j);
+        AMP_1_new(k) = 0;
+        AMP_2_new(k) = AMP_2(j);
+        PH_1_new(k) = PH_2(j) - (2*pi*F_2(j)/Fs)*S;
+        PH_2_new(k) = PH_2(j);
+        j = j + 1;
+    elseif (i <= L_1 && j <= L_2)
+        % Matching
+        F_1_new(k) = F_1(i);
+        F_2_new(k) = F_2(I_1(i));
+        AMP_1_new(k) = AMP_1(i);
+        AMP_2_new(k) = AMP_2(I_1(i));
+        PH_1_new(k) = PH_1(i);
+        PH_2_new(k) = PH_2(I_1(i));      
+        i = i + 1;
+        j = j + 1;
+    end
+    
+    
+end
+
 
 SinM_1_new = struct('Tc',0,'AMP',zeros(L_new,1),'PH',zeros(L_new,1),'F',zeros(L_new,1),'SNR',0);
 SinM_1_new.Tc = SinM_prev.Tc;
