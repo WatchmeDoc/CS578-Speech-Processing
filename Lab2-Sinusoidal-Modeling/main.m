@@ -8,7 +8,9 @@ clear; close all;
 
 soundsc(Y, fs);
 fprintf('SNR: %f\n', SNR);
-
+y_padded = [Y; zeros(length(s) - length(Y), 1)];
 subplot(211); plot(s); title('Original signal');
-subplot(212); plot(Y); title('Synthesized signal');
-MSE = (1/size(s,1)) * sum((s - Y).^2)
+subplot(212); plot(y_padded); title('Synthesized signal');
+
+MSE = (1/size(s,1)) * sum((s - y_padded).^2);
+fprintf('MSE: %f\n', MSE);
