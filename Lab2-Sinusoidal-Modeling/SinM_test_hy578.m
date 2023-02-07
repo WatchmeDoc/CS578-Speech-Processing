@@ -231,13 +231,14 @@ for l=1:L
     % M is the nearest integer
     M = round(x_star);
     % Compute a, b coefficients
-    res = [3/T^2 -1/T; -2/T^3 1/T^2] * [ph_l2 - ph_l1 - w_1*N + 2*pi*M; w_2 - w_1];
+    res = [3/N^2 -1/N; -2/N^3 1/N^2] * [ph_l2 - ph_l1 - w_1*N + 2*pi*M; w_2 - w_1];
     a = res(1);
     b = res(2);
     % Compute è interpolation
     theta_tilde = ph_l1 + w_1 * t + a * (t.^2) + b * (t.^3);
     
-    % Add the results to 
+    % Add the results to y
+    % 
     Yf(:) = Yf + A_tilde .* cos(theta_tilde);
 end
 
