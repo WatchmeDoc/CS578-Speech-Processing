@@ -1,21 +1,18 @@
 function out = quantized_lpc(file, OrderLPC, num_bits, min_g, max_g, vq_codebook)
 %
 % INPUT:
-%   file: input filename of a wav file
+%   file:     input filename of a wav file
+%   OrderLPC: the order of the LPC
+%   num_bits: the number of bits for quantization
+%   min_g:    minimum value for the scalar quantization
+%   max_g:    maximum value for the scalar quantization
+%   vq_codebook: the codebook for the vector quantization
+%
 % OUTPUT:
 %   out: a vector contaning the output signal
 %
-% Example:
-%   
-%   out = lpc_as('speechsample.wav');
-%   [sig,fs]= wavread('speechsample.wav');
-%   sound(out,fs);
-%   sound(sig,fs);
-%   sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
-%
-%
-% Yannis Stylianou
-% CSD - CS 578
+% George Manos, Alexandros Angelakis
+% CSD - CS578
 %
 [sig, Fs] = audioread(file);
 

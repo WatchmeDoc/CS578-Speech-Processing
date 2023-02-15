@@ -5,6 +5,10 @@ function [CB] = construct_vq_codebook(data, B)
 %   B: The number of bits, so 2^B will be the codebook size. 
 % OUTPUT:
 %   CB: A 2^B x OrderLPC matrix containing codevectors
+%
+% George Manos, Alexandros Angelakis
+% CSD - CS578
+
     M = 2^B;
     e = 0.05;
     CB = (mean(data));

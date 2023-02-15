@@ -1,20 +1,14 @@
 function [means, variances, weights] = GMM_training(features, k)
 %
 % INPUT:
-%   file: input filename of a wav file
+%   file: the features of a speech signal (mel cepstrum)
+%   k:    number of gaussian mixtures
 % OUTPUT:
-%   out: a vector contaning the output signal
+%   means:     mixture means, one row per mixture
+%   variances: mixture variances, one row per mixture
+%   weights:   mixture weights, one per mixture
 %
-% Example:
-%   
-%   out = lpc_as('speechsample.wav');
-%   [sig,fs]= wavread('speechsample.wav');
-%   sound(out,fs);
-%   sound(sig,fs);
-%   sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
-%
-%
-% Yannis Stylianou
+% George Manos, Alexandros Angelakis
 % CSD - CS 578
 %
 

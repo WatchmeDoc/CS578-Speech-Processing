@@ -1,6 +1,9 @@
 function [f_0] = acf_peak_picking(frame, fs)
 % acf_peak_picking uses short-time autocorrelation method to estimate and
 % return the provided speech frame's pitch (fundamental frequency)
+%
+% George Manos, Alexandros Angelakis
+% CSD - CS578
 
 N = length(frame);
 corr = xcorr(frame);

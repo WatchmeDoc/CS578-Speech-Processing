@@ -3,10 +3,13 @@ function [qg] = scalar_quantization(G, B, Xmin, Xmax)
 % INPUT:
 %   G: The signal Gain
 %   B: The number of Bits
-%   min: minimum value of G
-%   max: maximum value of G
+%   Xmin: minimum value of G
+%   Xmax: maximum value of G
 % OUTPUT:
 %   qg: Quantized value of G
+%
+% George Manos, Alexandros Angelakis
+% CSD - CS578
 
 % quantization levels
 levels = 2^B;

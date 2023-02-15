@@ -3,18 +3,9 @@ function mfcc = feature_extraction(file)
 % INPUT:
 %   file: input filename of a wav file
 % OUTPUT:
-%   out: a vector contaning the output signal
+%   out: the mel cepstrum of the file
 %
-% Example:
-%   
-%   out = lpc_as('speechsample.wav');
-%   [sig,fs]= wavread('speechsample.wav');
-%   sound(out,fs);
-%   sound(sig,fs);
-%   sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
-%
-%
-% Yannis Stylianou
+% George Manos, Alexandros Angelakis
 % CSD - CS 578
 %
 

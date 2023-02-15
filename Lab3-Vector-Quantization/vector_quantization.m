@@ -6,6 +6,9 @@ function [q] = vector_quantization(data, codebook)
 %   codebook: A 2^B x OrderLPC matrix containing codevectors
 % OUTPUT:
 %   q: data vector quantized
+%
+% George Manos, Alexandros Angelakis
+% CSD - CS578
 
     q = codebook(1, :);
     min_distance = sqrt(sum((q - data.') .^ 2));

@@ -1,20 +1,11 @@
 function label = GMM_predict(mfcc_arr)
 %
 % INPUT:
-%   file: input filename of a wav file
+%   mfcc_arr: array of mel cepstrum coefficients
 % OUTPUT:
-%   out: a vector contaning the output signal
+%   label: the label of the predicted speech signal
 %
-% Example:
-%   
-%   out = lpc_as('speechsample.wav');
-%   [sig,fs]= wavread('speechsample.wav');
-%   sound(out,fs);
-%   sound(sig,fs);
-%   sound([out [zeros(2000,1);sig(1:length(sig)-2000)]],fs); % create echo
-%
-%
-% Yannis Stylianou
+% George Manos, Alexandros Angelakis
 % CSD - CS 578
 %
 

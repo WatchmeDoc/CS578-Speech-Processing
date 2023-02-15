@@ -1,10 +1,15 @@
 function [G, comp_coeffs] = speech_analysis(file, OrderLPC)
 %
 % INPUT:
-%   file: input filename of a wav file
+%   file:     input filename of a wav file
+%   OrderLPC: the order of the LPC
 % OUTPUT:
-%   G : the gains of each frame of the wav file
+%   G :          the gains of each frame of the wav file
+%   comp_coeffs: the companding coefficients
 %
+% George Manos, Alexandros Angelakis
+% CSD - CS578
+
 [sig, Fs] = audioread(file);
 
 Horizon = 30;  % 30ms - window length

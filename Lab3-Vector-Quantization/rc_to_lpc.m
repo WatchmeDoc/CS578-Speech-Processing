@@ -3,14 +3,13 @@ function a = rc_to_lpc(k, OrderLPC)
 % prediction coefficients.
 %
 % INPUT:
-%   LPC_Order: order of LPC 
+%   OrderLPC: order of LPC 
 %   k: the reflection coefficients vector
 % OUTPUT:
 %   a: the linear prediction coefficients of order OrderLPC
 %
-% Alexandros Angelakis csd4334
-% George Manos csd4333
-% CSD - CS 578
+% George Manos, Alexandros Angelakis
+% CSD - CS578
 
 % matrix with linear prediction coefficients from order 1 to OrderLPC
 LPCmatrix = zeros(OrderLPC, OrderLPC);

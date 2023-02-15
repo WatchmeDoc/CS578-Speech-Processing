@@ -5,6 +5,9 @@ function out = power_spectra(sig, Fs)
 %   Fs:  the sampling frequency
 % OUTPUT:
 %   out: the power spectra of the input signal
+%
+% George Manos, Alexandros Angelakis
+% CSD - CS578
 
 Horizon = 30;  %30ms - window length
 

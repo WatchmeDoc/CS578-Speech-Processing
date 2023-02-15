@@ -1,6 +1,9 @@
 function [f_0] = fft_peak_picking(frame, fs, NFFT)
 % fft_peak_picking uses the STFT of the signal and chooses the first 'highest' peak and
 % return the provided speech frame's pitch (fundamental frequency)
+%
+% George Manos, Alexandros Angelakis
+% CSD - CS578
 
 freq = [0:fs/NFFT:fs/2-1/fs];
 max_freq = 500;

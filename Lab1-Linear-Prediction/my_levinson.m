@@ -1,10 +1,14 @@
 function a = my_levinson(r, p)
 %
 % INPUT:
-%   corr_sig: autocorrelation of the frame
+%   r: autocorrelation of the frame
 %   p: the order of LPC
 % OUTPUT:
 %   a: LPC coefficients in form [1, -a]
+%
+% George Manos, Alexandros Angelakis
+% CSD - CS578
+
     % Initial step:
     I = zeros(p+1, p);
     E = zeros(p, 1);

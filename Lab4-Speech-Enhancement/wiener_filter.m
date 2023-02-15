@@ -7,6 +7,9 @@ function out = wiener_filter(sig, Sb, a, Fs)
 %   Fs:  the sampling frequency
 % OUTPUT:
 %   out: the enhanced signal
+%
+% George Manos, Alexandros Angelakis
+% CSD - CS578
 
 Horizon = 30;  %30ms - window length
 Buffer = 0;    % initialization
